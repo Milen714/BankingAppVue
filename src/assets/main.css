@@ -7,3 +7,6 @@ html {
 body {
   color: #0f172a;
 }
+/* main {
+  @apply border-2 border-red-900;
+} */
