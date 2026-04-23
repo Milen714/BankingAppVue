@@ -1,6 +1,10 @@
 <script setup>
+import MainNavBar from './components/organisms/MainNavBar.vue';
 </script>
 
 <template>
-  <router-view />
+  <MainNavBar />
+  <main class="mt-15">
+    <router-view />
+  </main>
 </template>
