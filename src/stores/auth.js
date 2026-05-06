@@ -157,6 +157,10 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = newToken
     user.value = newUser
     setApiAuthToken(newToken)
+    // Also save to localStorage as backup
+    if (newToken) {
+      localStorage.setItem('auth_token', newToken)
+    }
   }
 
   // Clear auth state on logout
