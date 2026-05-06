@@ -1,9 +1,9 @@
 <script setup>
 const items = [
-  { key: 'dashboard', label: 'Dashboard', icon: 'pi pi-th-large', active: true },
-  { key: 'accounts', label: 'Bank Accounts', icon: 'pi pi-building-columns', active: false },
-  { key: 'transfers', label: 'Transfers', icon: 'pi pi-arrow-right-arrow-left', active: false },
-  { key: 'transactions', label: 'Transactions', icon: 'pi pi-receipt', active: false },
+  { key: 'Overview', label: 'Overview', icon: 'pi pi-th-large', active: true },
+  { key: 'Bank Accounts', label: 'Bank Accounts', icon: 'pi pi-building-columns', active: false },
+  { key: 'Transfers', label: 'Transfers', icon: 'pi pi-arrow-right-arrow-left', active: false },
+  { key: 'Transactions', label: 'Transactions', icon: 'pi pi-receipt', active: false },
 ]
 </script>
 

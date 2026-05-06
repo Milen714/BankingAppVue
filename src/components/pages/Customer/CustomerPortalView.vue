@@ -1,10 +1,11 @@
 <script setup>
 import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
-import CustomerAccountCard from '@/components/molecules/CustomerAccountCard.vue'
 import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
+import PortalHeader from '@/components/organisms/PortalHeader.vue'
+import CustomerAccountsCompact from '@/components/organisms/CustomerAccountsCompact.vue'
 
-const accounts = [
+const currentAccounts = [
 	{
 		title: 'Main Checking',
 		iban: 'NL93 INGB 0123 4567 89',
@@ -14,6 +15,10 @@ const accounts = [
 		pending: false,
 		accent: 'bg-orange-100',
 	},
+	
+]
+
+const savingsAccounts = [
 	{
 		title: 'Instant Savings',
 		iban: 'NL21 INGB 9876 5432 10',
@@ -73,70 +78,48 @@ const transactions = [
 <template>
 	<section class="bg-[#f6efec]">
 		<div class="mx-auto flex min-h-[calc(100vh-60px)] max-w-350">
-			<CustomerSidebarNav />
+			<CustomerSidebarNav />	
 
 			<div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
-				<header class="mb-6 flex flex-wrap items-start justify-between gap-4">
-					<div>
-						<p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Total Balance</p>
-						<h1 class="mt-2 text-5xl font-semibold text-slate-900">EUR 16,650.00</h1>
-					</div>
+					<PortalHeader :title="'Overview'" :buttons="[
+						{ label: 'New Transfer', icon: 'pi pi-send', type: 'primary', linkTo: '/customer/transfer' },
+						{ label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
+						{ label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
+					]" />
 
-					<div class="flex flex-wrap gap-2">
-						<button type="button" class="rounded-lg bg-[#b54d08] px-4 py-2 text-sm font-semibold text-white hover:bg-[#a74407]">
-							<i class="pi pi-send mr-1.5"></i>
-							Transfer Money
-						</button>
-						<button type="button" class="rounded-lg bg-[#f7e7e0] px-4 py-2 text-sm font-medium text-slate-900 hover:bg-[#f1dbd1]">
-							<i class="pi pi-plus-circle mr-1.5"></i>
-							Request New Account
-						</button>
-						<button type="button" class="hidden rounded-lg bg-[#f7e7e0] px-4 py-2 text-sm font-medium text-slate-900 hover:bg-[#f1dbd1] lg:inline-flex">
-							<i class="pi pi-table mr-1.5"></i>
-							View All Transactions
-						</button>
-					</div>
-				</header>
-
-				<section>
-					<h2 class="mb-3 text-4xl font-semibold text-slate-900">Your Accounts</h2>
-					<div class="grid gap-4 lg:grid-cols-3">
-						<CustomerAccountCard
-							v-for="account in accounts"
-							:key="account.title"
-							:title="account.title"
-							:iban="account.iban"
-							:balance="account.balance"
-							:status="account.status"
-							:icon="account.icon"
-							:pending="account.pending"
-							:accent="account.accent"
-						/>
-					</div>
+				<!-- Compact Accounts Layout -->
+				<section class="bg-white p-6 mt-4">
+					<CustomerAccountsCompact
+						:title="'Current Accounts'"
+						:accounts="currentAccounts"
+					/>
+					<CustomerAccountsCompact
+						:title="'Savings Accounts'"
+						:accounts="savingsAccounts"
+					/>
 				</section>
-
+					
 				<section class="mt-8">
-					<div class="mb-3 flex items-center justify-between">
-						<h2 class="text-4xl font-semibold text-slate-900">Recent Transactions</h2>
-						<button type="button" class="text-sm font-medium text-[#cc570f] hover:text-[#b14c0d]">View all</button>
-					</div>
-
-					<ul class="overflow-hidden rounded-2xl border border-[#e7c9bd] bg-white">
-						<CustomerTransactionItem
-							v-for="item in transactions"
-							:key="item.title + item.subtitle"
-							:title="item.title"
-							:subtitle="item.subtitle"
-							:amount="item.amount"
-							:positive="item.positive"
-							:pending="item.pending"
-							:icon="item.icon"
-						/>
-					</ul>
-				</section>
+						<div class="mb-3 flex items-center justify-between">
+							<h2 class="text-4xl font-semibold text-slate-900">Recent Transactions</h2>
+							<button type="button" class="text-sm font-medium text-[#cc570f] hover:text-[#b14c0d]">View all</button>
+						</div>
+						<ul class="overflow-hidden rounded-2xl border border-[#e7c9bd] bg-white">
+							<CustomerTransactionItem
+								v-for="item in transactions"
+								:key="item.title + item.subtitle"
+								:title="item.title"
+								:subtitle="item.subtitle"
+								:amount="item.amount"
+								:positive="item.positive"
+								:pending="item.pending"
+								:icon="item.icon"
+							/>
+						</ul>
+					</section>
 			</div>
 		</div>
 
-		<CustomerBottomNav />
+		<!-- <CustomerBottomNav /> -->
 	</section>
 </template>

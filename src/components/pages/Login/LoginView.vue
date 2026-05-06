@@ -1,11 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRouter, useRoute } from 'vue-router'
 import LoginAuthCard from '@/components/organisms/LoginAuthCard.vue'
 import LoginBrandHeader from '@/components/organisms/LoginBrandHeader.vue'
+import PendingApprovalModal from '@/components/organisms/PendingApprovalModal.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const email = ref('')
@@ -17,6 +19,7 @@ const hasSubmitted = ref(false)
 const focusedField = ref('')
 const statusMessage = ref('')
 const statusType = ref('success')
+const showPendingApprovalModal = ref(false)
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -65,11 +68,37 @@ const handleSubmit = async () => {
     rememberMe: rememberMe.value,
   })
 
+  // Handle pending approval status
+  if (result.status === 'pending_approval') {
+    isLoading.value = false
+    showPendingApprovalModal.value = true
+    // Clear the form
+    email.value = ''
+    password.value = ''
+    hasSubmitted.value = false
+    return
+  }
+
   if (result.success) {
     statusType.value = 'success'
     statusMessage.value = result.message || 'Signed in successfully.'
     isLoading.value = false
-    await router.push('/')
+    
+    // Ensure user is loaded before checking role
+    if (!authStore.user) {
+      await authStore.fetchLoggedInUser()
+      console.log('Fetched user after login:', authStore.user)
+    }
+    
+    if (authStore.user?.role === 'ROLE_CUSTOMER') {
+      await router.push('/customer')
+      return
+    }
+    if (authStore.user?.role === 'ROLE_EMPLOYEE') {
+      await router.push('/employee')
+      return
+    }
+    
     return
   }
 
@@ -88,6 +117,10 @@ const handleBlur = () => {
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
+}
+
+const handleModalClose = () => {
+  showPendingApprovalModal.value = false
 }
 </script>
 
@@ -132,5 +165,11 @@ const togglePasswordVisibility = () => {
         </p>
       </div>
     </div>
+
+    <!-- Pending Approval Modal -->
+    <PendingApprovalModal
+      :is-open="showPendingApprovalModal"
+      @close="handleModalClose"
+    />
   </section>
 </template>

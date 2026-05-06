@@ -66,10 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await axios.post(`/auth/login`, credentials)
       const responseData = response?.data || {}
+      console.log('Login response data:', responseData)
 
-      const loginSucceeded = responseData.success !== undefined
-        ? responseData.success
-        : !!(responseData.token || responseData.access_token)
+      const loginSucceeded = response.status === 200
 
       if (!loginSucceeded) {
         return {
@@ -79,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       const authToken = responseData.token || responseData.access_token || responseData.data?.token
-      const authUser = responseData.user || responseData.data?.user || null
+      const authUser = responseData
 
       if (!authToken) {
         return {
@@ -100,6 +99,16 @@ export const useAuthStore = defineStore('auth', () => {
       }
     } catch (error) {
       clearAuth()
+      
+      // Check if account is pending approval (403 Forbidden)
+      if (error.response?.status === 403 && error.response?.data?.message?.includes('Account has not been approved yet')) {
+        return {
+          success: false,
+          status: 'pending_approval',
+          message: error.response?.data?.message || 'Your account is pending approval.',
+        }
+      }
+      
       return {
         success: false,
         message: error.response?.data?.message || 'Unable to sign in. Please try again.',

@@ -54,10 +54,10 @@ router.beforeEach(async (to) => {
   }
 
     if (to.meta.requiresEmployee && authStore.user?.role !== 'ROLE_EMPLOYEE') {
-        return { name: 'not-found' }
+        return { path: '/login', name: 'login' }
     }
     if (to.meta.requiresCustomer && authStore.user?.role !== 'ROLE_CUSTOMER') {
-        return { name: 'not-found' }
+        return { path: '/login', name: 'login' }
     }
 
   return true
