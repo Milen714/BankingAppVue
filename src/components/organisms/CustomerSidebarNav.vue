@@ -1,9 +1,13 @@
 <script setup>
+import router from '@/router';
+import { RouterLink, useRoute } from 'vue-router'
+const route = useRoute();
+const isActive = (path) => route.path === path;
 const items = [
-  { key: 'Overview', label: 'Overview', icon: 'pi pi-th-large', active: true },
-  { key: 'Bank Accounts', label: 'Bank Accounts', icon: 'pi pi-building-columns', active: false },
-  { key: 'Transfers', label: 'Transfers', icon: 'pi pi-arrow-right-arrow-left', active: false },
-  { key: 'Transactions', label: 'Transactions', icon: 'pi pi-receipt', active: false },
+  { key: 'Overview', label: 'Overview', icon: 'pi pi-th-large', route: '/customer'},
+  { key: 'Bank Accounts', label: 'Bank Accounts', icon: 'pi pi-building-columns', route: '/customer/accounts'},
+  { key: 'Transfers', label: 'Transfers', icon: 'pi pi-arrow-right-arrow-left', route: '/customer/transfers'},
+  { key: 'Transactions', label: 'Transactions', icon: 'pi pi-receipt', route: '/customer/transactions'},
 ]
 </script>
 
@@ -17,14 +21,15 @@ const items = [
     <nav class="flex-1 px-3 py-5">
       <ul class="space-y-1.5">
         <li v-for="item in items" :key="item.key">
-          <button
+          <RouterLink
+            :to="item.route"
             type="button"
             class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium"
-            :class="item.active ? 'bg-[#f3e4dc] text-[#cc570f]' : 'text-slate-600 hover:bg-slate-100'"
+            :class="isActive(item.route) ? 'bg-[#f3e4dc] text-[#cc570f]' : 'text-slate-600 hover:bg-slate-100'"
           >
             <i :class="[item.icon, 'text-sm']"></i>
             {{ item.label }}
-          </button>
+          </RouterLink>
         </li>
       </ul>
     </nav>

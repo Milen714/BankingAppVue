@@ -76,8 +76,8 @@ const transactions = [
 </script>
 
 <template>
-	<section class="bg-[#f6efec]">
-		<div class="mx-auto flex min-h-[calc(100vh-60px)] max-w-350">
+	<section class="bg-[#f6efec] ">
+		<div class="mx-auto flex min-h-[calc(100vh-60px)] ">
 			<CustomerSidebarNav />	
 
 			<div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">

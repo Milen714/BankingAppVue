@@ -4,6 +4,9 @@ import Homepage from '@/components/pages/Home/Homepage.vue'
 import LoginView from '@/components/pages/Login/LoginView.vue'
 import RegisterView from '@/components/pages/Register/RegisterView.vue'
 import CustomerPortalView from '@/components/pages/Customer/CustomerPortalView.vue'
+import CustomerPortalRequestAccountView from '@/components/pages/Customer/CustomerPortalRequestAccountView.vue'
+import CustomerAccountTransactions from '@/components/pages/Customer/CustomerAccountTransactions.vue'
+import CustomerTransferView from '@/components/pages/Customer/CustomerTransferView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -27,6 +30,21 @@ const router = createRouter({
       path: '/customer',
       name: 'customer-portal',
       component: CustomerPortalView
+    },
+    {
+      path: '/customer/request-account',
+      name: 'customer-request-account',
+      component: CustomerPortalRequestAccountView
+    },
+    {
+      path: '/customer/transactions',
+      name: 'customer-transactions',
+      component: CustomerAccountTransactions
+    },
+    {
+      path: '/customer/transfer',
+      name: 'customer-transfer',
+      component: CustomerTransferView
     },
     {
       path: '/employee',
