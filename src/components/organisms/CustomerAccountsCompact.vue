@@ -1,5 +1,7 @@
 <script setup>
 import CustomerAccountCompactCard from '@/components/molecules/CustomerAccountCompactCard.vue'
+import { computed } from 'vue'
+import { RouterLink } from 'vue-router';
 
 const props = defineProps({
   title: {
@@ -11,6 +13,45 @@ const props = defineProps({
     required: true,
   },
 })
+
+/**
+ * Get icon and accent color based on account type
+ */
+function getAccountTypeStyle(type) {
+  switch (type) {
+    case 'SAVINGS':
+      return {
+        icon: 'pi pi-star-fill',
+        accent: 'bg-sky-100'
+      };
+    case 'CHECKING':
+    default:
+      return {
+        icon: 'pi pi-credit-card',
+        accent: 'bg-orange-100'
+      };
+  }
+}
+
+/**
+ * Map account data for display
+ */
+function mapAccountForDisplay(account) {
+  const { icon, accent } = getAccountTypeStyle(account.type);
+  return {
+    id: account.id,
+    title: account.title ?? 'My Account',
+    iban: account.iban,
+    balance: `EUR ${account.balance.toFixed(2)}`,
+    status: account.status,
+    icon: icon,
+    pending: account.status === 'PENDING_APPROVAL',
+    accent: account.status === 'PENDING_APPROVAL' ? 'bg-slate-100' : accent,
+  };
+}
+
+// Map accounts for display
+const mappedAccounts = computed(() => props.accounts.map(mapAccountForDisplay))
 </script>
 
 <template>
@@ -27,20 +68,23 @@ const props = defineProps({
 
     <div class="space-y-3">
       <div
-        v-for="(account, index) in accounts"
-        :key="account.title"
+        v-for="(account, index) in mappedAccounts"
+        :key="account.id"
         class="rounded-xl border border-[#e7c9bd] bg-white transition-all hover:shadow-md"
+        :class="account.accent"
       >
         <!-- Compact Account Header -->
-        <CustomerAccountCompactCard
-          :title="account.title"
-          :iban="account.iban"
-          :balance="account.balance"
-          :status="account.status"
-          :icon="account.icon"
-          :pending="account.pending"
-          :is-expanded="false"
-        />
+        <Router-link :to="`/customer/accounts/${account.iban}`">
+          <CustomerAccountCompactCard
+            :title="account.title"
+            :iban="account.iban"
+            :balance="account.balance"
+            :status="account.status"
+            :icon="account.icon"
+            :pending="account.pending"
+            :is-expanded="false"
+          />
+        </Router-link>
       </div>
     </div>
   </section>

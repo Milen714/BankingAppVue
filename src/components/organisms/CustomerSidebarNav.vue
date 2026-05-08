@@ -35,10 +35,14 @@ const items = [
     </nav>
 
     <div class="border-t border-slate-200 px-4 py-4">
-      <button type="button" class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900">
+      <RouterLink 
+        to="/customer/profileSettings"
+        type="button" 
+        class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+      >
         <i class="pi pi-cog"></i>
         Settings
-      </button>
+      </RouterLink>
     </div>
   </aside>
 </template>

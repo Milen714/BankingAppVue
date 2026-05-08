@@ -7,6 +7,12 @@ import CustomerPortalView from '@/components/pages/Customer/CustomerPortalView.v
 import CustomerPortalRequestAccountView from '@/components/pages/Customer/CustomerPortalRequestAccountView.vue'
 import CustomerAccountTransactions from '@/components/pages/Customer/CustomerAccountTransactions.vue'
 import CustomerTransferView from '@/components/pages/Customer/CustomerTransferView.vue'
+import CustomerWithdrawView from '@/components/pages/Customer/CustomerWithdrawView.vue'
+import CustomerDepositView from '@/components/pages/Customer/CustomerDepositView.vue'
+import CustomerBankAccountsView from '@/components/pages/Customer/CustomerBankAccountsView.vue'
+import CustomerAccountView from '@/components/pages/Customer/CustomerAccountView.vue'
+import CustomerProfileView from '@/components/pages/Customer/CustomerProfileView.vue'
+// import NotFound from '@/components/pages/NotFound.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -29,22 +35,57 @@ const router = createRouter({
     {
       path: '/customer',
       name: 'customer-portal',
-      component: CustomerPortalView
+      component: CustomerPortalView,
+      meta: { requiresAuth: true, requiresCustomer: true }
     },
     {
       path: '/customer/request-account',
       name: 'customer-request-account',
-      component: CustomerPortalRequestAccountView
+      component: CustomerPortalRequestAccountView,
+      meta: { requiresAuth: true, requiresCustomer: true }
     },
     {
       path: '/customer/transactions',
       name: 'customer-transactions',
-      component: CustomerAccountTransactions
+      component: CustomerAccountTransactions,
+      meta: { requiresAuth: true, requiresCustomer: true }
+    },
+    {
+      path: '/customer/accounts',
+      name: 'customer-bank-accounts',
+      component: CustomerBankAccountsView,
+      meta: { requiresAuth: true, requiresCustomer: true }
+    },
+    {
+      path: '/customer/accounts/:iban',
+      name: 'customer-bank-account',
+      component: CustomerAccountView,
+      props: true,
+      meta: { requiresAuth: true, requiresCustomer: true }
     },
     {
       path: '/customer/transfer',
       name: 'customer-transfer',
-      component: CustomerTransferView
+      component: CustomerTransferView,
+      meta: { requiresAuth: true, requiresCustomer: true }
+    },
+    {
+      path: '/customer/withdraw',
+      name: 'customer-withdraw',
+      component: CustomerWithdrawView,
+      meta: { requiresAuth: true, requiresCustomer: true }
+    },
+    {
+      path: '/customer/deposit',
+      name: 'customer-deposit',
+      component: CustomerDepositView,
+      meta: { requiresAuth: true, requiresCustomer: true }
+    },
+    {
+      path: '/customer/profileSettings',
+      name: 'customer-profile',
+      component: CustomerProfileView,
+      meta: { requiresAuth: true, requiresCustomer: true }
     },
     {
       path: '/employee',
@@ -57,18 +98,32 @@ const router = createRouter({
     // }
   ]
 });
-// Global navigation guard to check authentication
+// Initialize auth on any navigation
+let authInitialized = false;
+
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   
-  // Wait for auth to be initialized if not already done
-  if (authStore.loading) {
-    await authStore.fetchLoggedInUser()
+  // Initialize auth on first navigation
+  if (!authInitialized) {
+    authInitialized = true;
+    // Always try to restore user if we have a token, regardless of loading state
+    if (authStore.token && !authStore.user) {
+      await authStore.fetchLoggedInUser()
+    }
   }
   
-  // If route requires auth but user is not logged in
+  // For any protected route, ensure user is loaded
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    return { name: 'login', query: { redirect: to.path } }
+    // If we have a token but no user, try to fetch the user
+    if (authStore.token && !authStore.user) {
+      await authStore.fetchLoggedInUser()
+    }
+    
+    // If still not logged in, redirect to login
+    if (!authStore.isLoggedIn) {
+      return { name: 'login', query: { redirect: to.path } }
+    }
   }
 
     if (to.meta.requiresEmployee && authStore.user?.role !== 'ROLE_EMPLOYEE') {

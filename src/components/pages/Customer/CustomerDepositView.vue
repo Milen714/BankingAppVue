@@ -10,14 +10,14 @@ const bankAccountStore = useBankAccountStore()
 onMounted(async() => {
    await bankAccountStore.fetchMyBankAccounts()
 })
-const currentAccounts = computed(() => bankAccountStore.myCurrentAccounts.map(account => ({
+const myAccounts = computed(() => bankAccountStore.myAccounts.map(account => ({
   title: account.title?? 'My Account',
   iban: account.iban,
   balance: `EUR ${account.balance.toFixed(2)}`
 })))
 
-const handleTransferSuccess = () => {
-  console.log('Transfer completed successfully')
+const handleDepositSuccess = () => {
+  console.log('Deposit completed successfully')
 }
 </script>
 
@@ -28,18 +28,18 @@ const handleTransferSuccess = () => {
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
         <PortalHeader
-          :title="'New Transfer'"
+          :title="'Deposit Funds'"
           :buttons="[
             { label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
-            { label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
+            { label: 'Transfer Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/transfer' },
           ]"
         />
 
-        <!-- Transfer Form -->
+        <!-- Deposit Form -->
         <div class="mt-6 max-w-2xl rounded-lg bg-white p-6">
           <BankingForm 
-          :type="'TRANSFER'"
-          :accounts="currentAccounts" @success="handleTransferSuccess" />
+          :type="'DEPOSIT'"
+          :accounts="myAccounts" @success="handleDepositSuccess" />
         </div>
       </div>
     </div>

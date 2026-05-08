@@ -1,125 +1,59 @@
 <script setup>
 import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
-import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
-import CustomerAccountsCompact from '@/components/organisms/CustomerAccountsCompact.vue'
+import CustomerAccountsList from '@/components/organisms/CustomerAccountsList.vue'
+import TransactionsList from '@/components/organisms/TransactionsList.vue'
+import { useBankAccountStore } from '@/stores/bankAccount'
+import { onMounted, computed } from 'vue'
 
-const currentAccounts = [
-	{
-		title: 'Main Checking',
-		iban: 'NL93 INGB 0123 4567 89',
-		balance: 'EUR 4,250.00',
-		status: 'APPROVED',
-		icon: 'pi pi-credit-card',
-		pending: false,
-		accent: 'bg-orange-100',
-	},
-	
-]
+const bankAccountStore = useBankAccountStore()
 
-const savingsAccounts = [
-	{
-		title: 'Instant Savings',
-		iban: 'NL21 INGB 9876 5432 10',
-		balance: 'EUR 12,400.00',
-		status: 'APPROVED',
-		icon: 'pi pi-star-fill',
-		pending: false,
-		accent: 'bg-sky-100',
-	},
-	{
-		title: 'Holiday Fund',
-		iban: 'Account generation in progress',
-		balance: '---',
-		status: 'PENDING APPROVAL',
-		icon: 'pi pi-send',
-		pending: true,
-		accent: 'bg-slate-100',
-	},
-]
+onMounted(async() => {
+   console.log('Portal mounted, fetching accounts...')
+   await bankAccountStore.fetchMyBankAccounts()
+   await bankAccountStore.fetchRecentTransactions()
+})
 
-const transactions = [
-	{
-		title: 'Albert Heijn Supermarket',
-		subtitle: 'Today, 14:32 • Main Checking',
-		amount: '-EUR 84.50',
-		positive: false,
-		pending: false,
-		icon: 'pi pi-shopping-bag',
-	},
-	{
-		title: 'Salary Deposit - Tech Corp',
-		subtitle: 'Yesterday, 09:00 • Main Checking',
-		amount: '+EUR 4,250.00',
-		positive: true,
-		pending: false,
-		icon: 'pi pi-wallet',
-	},
-	{
-		title: 'Bistro Amsterdam',
-		subtitle: 'Oct 24, 20:15 • Main Checking',
-		amount: '-EUR 120.00',
-		positive: false,
-		pending: true,
-		icon: 'pi pi-shop',
-	},
-	{
-		title: 'KPN Internet Services',
-		subtitle: 'Oct 22, 11:00 • Main Checking',
-		amount: '-EUR 45.00',
-		positive: false,
-		pending: false,
-		icon: 'pi pi-wifi',
-	},
-]
+const currentAccounts = computed(() => bankAccountStore.myCurrentAccounts)
+
+const savingsAccounts = computed(() => bankAccountStore.mySavingsAccounts)
+
 </script>
 
 <template>
+	<!-- <i  class="pi pi-spin pi-spinner  mr-2"></i> -->
 	<section class="bg-[#f6efec] ">
 		<div class="mx-auto flex min-h-[calc(100vh-60px)] ">
 			<CustomerSidebarNav />	
 
 			<div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
 					<PortalHeader :title="'Overview'" :buttons="[
-						{ label: 'New Transfer', icon: 'pi pi-send', type: 'primary', linkTo: '/customer/transfer' },
+						{ label: 'Transfer', icon: 'pi pi-arrow-up', type: 'primary', linkTo: '/customer/transfer' },
+						{ label: 'Deposit', icon: 'pi pi-arrow-down', type: 'primary', linkTo: '/customer/deposit' },
 						{ label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
 						{ label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
 					]" />
 
-				<!-- Compact Accounts Layout -->
-				<section class="bg-white p-6 mt-4">
-					<CustomerAccountsCompact
-						:title="'Current Accounts'"
-						:accounts="currentAccounts"
-					/>
-					<CustomerAccountsCompact
-						:title="'Savings Accounts'"
-						:accounts="savingsAccounts"
-					/>
+				<!-- Error Message -->
+				<section v-if="bankAccountStore.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+					{{ bankAccountStore.error }}
 				</section>
-					
+
+				<!-- Accounts Section -->
+				<CustomerAccountsList
+					:current-accounts="currentAccounts"
+					:savings-accounts="savingsAccounts"
+					:is-loading="bankAccountStore.loading"
+				/>
+
+				<!-- Transactions Section -->
 				<section class="mt-8">
-						<div class="mb-3 flex items-center justify-between">
-							<h2 class="text-4xl font-semibold text-slate-900">Recent Transactions</h2>
-							<button type="button" class="text-sm font-medium text-[#cc570f] hover:text-[#b14c0d]">View all</button>
-						</div>
-						<ul class="overflow-hidden rounded-2xl border border-[#e7c9bd] bg-white">
-							<CustomerTransactionItem
-								v-for="item in transactions"
-								:key="item.title + item.subtitle"
-								:title="item.title"
-								:subtitle="item.subtitle"
-								:amount="item.amount"
-								:positive="item.positive"
-								:pending="item.pending"
-								:icon="item.icon"
-							/>
-						</ul>
-					</section>
+					<TransactionsList :title="'Recent Transactions'" :transactions="bankAccountStore.recentTransactions" />
+				</section>
 			</div>
 		</div>
 
-		<!-- <CustomerBottomNav /> -->
+		<CustomerBottomNav />
 	</section>
 </template>

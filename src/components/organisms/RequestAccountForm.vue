@@ -3,9 +3,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import FormGroup from '@/components/molecules/FormGroup.vue'
+import { useBankAccountStore } from '@/stores/bankAccount'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const bankAccountStore = useBankAccountStore()
 
 const emit = defineEmits(['success'])
 
@@ -44,6 +46,7 @@ const handleSubmit = async () => {
     const payload = {
       type: accountType.value,
       title: title.value.trim(),
+      balance: 0, // New accounts start with 0 balance
       absoluteLimit: parseFloat(absoluteLimit.value),
       dailyLimit: parseFloat(dailyLimit.value),
       ownerId: authStore.user?.id,
@@ -51,11 +54,7 @@ const handleSubmit = async () => {
 
     console.log('Submitting account request:', payload)
 
-    // TODO: Replace with actual API call
-    // const response = await axios.post('/accounts/request', payload)
-
-    // Simulate API response
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await bankAccountStore.requestNewAccount(payload)
 
     successMessage.value = `Your ${accountType.value.toLowerCase()} account request has been submitted!`
     showSuccessModal.value = true

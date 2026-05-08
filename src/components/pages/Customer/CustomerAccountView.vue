@@ -2,15 +2,21 @@
 import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
-import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const iban = route.params.iban
 const bankAccountStore = useBankAccountStore()
+const bankAccount = ref(null);
 
 onMounted(async() => {
-  await bankAccountStore.fetchRecentTransactions()
+  await bankAccountStore.fetchMyBankAccounts()
+  await bankAccountStore.fetchBankAccountByIban(iban)
+  await bankAccountStore.fetchAccountTransactions(iban)
+  bankAccount.value = bankAccountStore.selectedAccount
 })
 </script>
 
@@ -21,14 +27,20 @@ onMounted(async() => {
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
         <PortalHeader
-          :title="'Recent Transactions'"
+          :title="bankAccount ? bankAccount.title : 'Account Details'"
           :buttons="[
             { label: 'Transfer', icon: 'pi pi-arrow-up', type: 'primary', linkTo: '/customer/transfer' },
 						{ label: 'Deposit', icon: 'pi pi-arrow-down', type: 'primary', linkTo: '/customer/deposit' },
 						{ label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
 						{ label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
+						{ label: 'Settings', icon: 'pi pi-cog', type: 'secondary', linkTo: `/customer/accounts/settings/${bankAccount?.iban}` },
           ]"
-        />
+          >
+          <section class="flex justify-between mb-3">
+            <p class="text-lg text-gray-600">IBAN: {{ bankAccount?.iban }}</p>
+            <span class="text-xl font-medium text-gray-600">Balance: EUR {{ bankAccount?.balance.toFixed(2) }}</span>
+          </section>
+        </PortalHeader>
 
         <!-- Transactions Section -->
 				<section class="mt-8">

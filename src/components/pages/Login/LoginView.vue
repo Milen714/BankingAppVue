@@ -87,7 +87,6 @@ const handleSubmit = async () => {
     // Ensure user is loaded before checking role
     if (!authStore.user) {
       await authStore.fetchLoggedInUser()
-      console.log('Fetched user after login:', authStore.user)
     }
     
     if (authStore.user?.role === 'ROLE_CUSTOMER') {

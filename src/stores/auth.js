@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref(null)
   const token = ref(getAuthToken())
-  const loading = ref(true)
+  const loading = ref(false)
   const isLoggedIn = computed(() => !!user.value)
 
   function clearSessionState() {
@@ -46,14 +46,16 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await axios.get(`/users/me`)
 
-      if (response.data.success) {
+      // API returns user object directly (has id and email fields)
+      if (response.data && response.data.id) {
+        user.value = response.data
+      } else if (response.data.success && response.data.user) {
+        // Or if wrapped with success field
         user.value = response.data.user
-        console.log('Logged in user:', user.value)
       } else {
         clearSessionState()
       }
     } catch (error) {
-      console.error('Error fetching logged in user:', error)
       clearSessionState()
     } finally {
       loading.value = false
@@ -66,7 +68,6 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await axios.post(`/auth/login`, credentials)
       const responseData = response?.data || {}
-      console.log('Login response data:', responseData)
 
       const loginSucceeded = response.status === 200
 
@@ -78,7 +79,9 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       const authToken = responseData.token || responseData.access_token || responseData.data?.token
-      const authUser = responseData
+      
+      // User might be returned directly in response (has id field) or nested under 'user' key
+      const authUser = (responseData.id ? responseData : null) || responseData.user || responseData.data?.user || null
 
       if (!authToken) {
         return {
@@ -169,6 +172,8 @@ export const useAuthStore = defineStore('auth', () => {
     // Also save to localStorage as backup
     if (newToken) {
       localStorage.setItem('auth_token', newToken)
+    } else {
+      localStorage.removeItem('auth_token')
     }
   }
 
