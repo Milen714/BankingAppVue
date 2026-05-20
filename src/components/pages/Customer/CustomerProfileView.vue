@@ -5,15 +5,19 @@ import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import FormGroup from '@/components/molecules/FormGroup.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useProfileSettingsStore } from '@/stores/profileSettings'
 
+const authStore = useAuthStore()
+const profileSettingsStore = useProfileSettingsStore()
 const router = useRouter()
-
+console.log('Authenticated user:', authStore.user)
 // Profile data
 const profileData = ref({
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  phoneNumber: '+31 6 12345678'
+  firstName: authStore.user ? authStore.user.firstName : 'John',
+  lastName: authStore.user ? authStore.user.lastName : 'Doe',
+  email: authStore.user ? authStore.user.email : 'john.doe@example.com',
+  phoneNumber: authStore.user ? authStore.user.phoneNumber : '+31 6 12345678',
 })
 
 // Edit states for each field
@@ -22,14 +26,14 @@ const editValues = ref({
   firstName: profileData.value.firstName,
   lastName: profileData.value.lastName,
   email: profileData.value.email,
-  phoneNumber: profileData.value.phoneNumber
+  phoneNumber: profileData.value.phoneNumber,
 })
 
 const isLoading = ref(false)
 const showSuccessModal = ref(false)
 
 // Start editing a field
-const startEditing = (field) => {
+const startEditing = field => {
   editingField.value = field
   editValues.value[field] = profileData.value[field]
 }
@@ -41,16 +45,17 @@ const cancelEditing = () => {
 }
 
 // Save individual field
-const saveField = async (field) => {
+const saveField = async field => {
   isLoading.value = true
   try {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800))
-    
+    // await new Promise(resolve => setTimeout(resolve, 800))
+
     // Update profile data
     profileData.value[field] = editValues.value[field]
+    profileSettingsStore.updateProfile(profileData.value) // Update global store
     editingField.value = null
-    
+
     // Show success
     showSuccessModal.value = true
     setTimeout(() => {
@@ -68,25 +73,25 @@ const fields = [
   {
     key: 'firstName',
     label: 'First Name',
-    displayLabel: 'First Name'
+    displayLabel: 'First Name',
   },
   {
     key: 'lastName',
     label: 'Last Name',
-    displayLabel: 'Last Name'
+    displayLabel: 'Last Name',
   },
   {
     key: 'email',
     label: 'Email Address',
     displayLabel: 'Email',
-    type: 'email'
+    type: 'email',
   },
   {
     key: 'phoneNumber',
     label: 'Phone Number',
     displayLabel: 'Phone Number',
-    type: 'tel'
-  }
+    type: 'tel',
+  },
 ]
 </script>
 
@@ -99,13 +104,19 @@ const fields = [
         <PortalHeader :title="'Profile Settings'" :buttons="[]" />
 
         <!-- Profile Content -->
-        <section class="mt-8 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#e7c9bd] bg-white p-6 text-center">
+        <section
+          class="mt-8 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#e7c9bd] bg-white p-6 text-center"
+        >
           <!-- Profile Header -->
           <div class="mb-6">
-            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#f3e4dc] mx-auto">
+            <div
+              class="flex h-20 w-20 items-center justify-center rounded-full bg-[#f3e4dc] mx-auto"
+            >
               <i class="pi pi-user text-4xl text-[#cc570f]"></i>
             </div>
-            <h3 class="mt-4 text-2xl font-semibold text-slate-900">{{ profileData.firstName }} {{ profileData.lastName }}</h3>
+            <h3 class="mt-4 text-2xl font-semibold text-slate-900">
+              {{ profileData.firstName }} {{ profileData.lastName }}
+            </h3>
             <p class="text-sm text-slate-600">{{ profileData.email }}</p>
           </div>
 
@@ -113,9 +124,14 @@ const fields = [
           <div class="w-full max-w-md space-y-6">
             <div v-for="field in fields" :key="field.key" class="flex flex-col items-start">
               <!-- Display Mode -->
-              <div v-if="editingField !== field.key" class="w-full flex items-center justify-between rounded-lg border border-[#e7c9bd] bg-slate-50 px-4 py-3">
+              <div
+                v-if="editingField !== field.key"
+                class="w-full flex items-center justify-between rounded-lg border border-[#e7c9bd] bg-slate-50 px-4 py-3"
+              >
                 <div class="flex-1">
-                  <label class="text-xs font-semibold text-slate-600 uppercase">{{ field.displayLabel }}</label>
+                  <label class="text-xs font-semibold text-slate-600 uppercase">{{
+                    field.displayLabel
+                  }}</label>
                   <p class="mt-1 text-base text-slate-900">{{ profileData[field.key] }}</p>
                 </div>
                 <button
@@ -165,7 +181,10 @@ const fields = [
   </section>
 
   <!-- Success Modal -->
-  <div v-if="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div
+    v-if="showSuccessModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  >
     <div class="w-full max-w-md rounded-lg bg-white px-6 py-8">
       <div class="mb-4 flex justify-center">
         <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
@@ -175,7 +194,9 @@ const fields = [
 
       <h2 class="mb-2 text-center text-2xl font-bold text-slate-900">Profile Updated</h2>
 
-      <p class="text-center text-slate-600">Your profile information has been updated successfully.</p>
+      <p class="text-center text-slate-600">
+        Your profile information has been updated successfully.
+      </p>
     </div>
   </div>
 </template>
