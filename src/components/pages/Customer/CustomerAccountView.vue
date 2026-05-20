@@ -30,7 +30,7 @@ onMounted(async() => {
           :title="bankAccount ? bankAccount.title : 'Account Details'"
           :buttons="[
             { label: 'Transfer', icon: 'pi pi-arrow-up', type: 'primary', linkTo: '/customer/transfer' },
-						{ label: 'Deposit', icon: 'pi pi-arrow-down', type: 'primary', linkTo: '/customer/deposit' },
+						{ label: 'Deposit', icon: 'pi pi-arrow-down', type: 'primary', linkTo: `/customer/deposit?iban=${bankAccount?.iban}` },
 						{ label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
 						{ label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
 						{ label: 'Settings', icon: 'pi pi-cog', type: 'secondary', linkTo: `/customer/accounts/settings/${bankAccount?.iban}` },
