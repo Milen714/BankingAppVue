@@ -32,7 +32,9 @@ const props = defineProps({
     <div class="flex items-start justify-between">
       <div class="flex-1">
         <div class="flex items-center gap-3">
-          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#f8e6de] text-[#b04a12]">
+          <span
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#f8e6de] text-[#b04a12]"
+          >
             <i :class="icon"></i>
           </span>
           <div>

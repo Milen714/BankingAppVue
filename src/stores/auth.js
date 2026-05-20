@@ -24,8 +24,8 @@ export const useAuthStore = defineStore('auth', () => {
     responseInterceptorInitialized = true
 
     axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
+      response => response,
+      error => {
         if (error.response?.status === 401) {
           clearSessionState()
         }
@@ -79,9 +79,13 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       const authToken = responseData.token || responseData.access_token || responseData.data?.token
-      
+
       // User might be returned directly in response (has id field) or nested under 'user' key
-      const authUser = (responseData.id ? responseData : null) || responseData.user || responseData.data?.user || null
+      const authUser =
+        (responseData.id ? responseData : null) ||
+        responseData.user ||
+        responseData.data?.user ||
+        null
 
       if (!authToken) {
         return {
@@ -102,16 +106,19 @@ export const useAuthStore = defineStore('auth', () => {
       }
     } catch (error) {
       clearAuth()
-      
+
       // Check if account is pending approval (403 Forbidden)
-      if (error.response?.status === 403 && error.response?.data?.message?.includes('Account has not been approved yet')) {
+      if (
+        error.response?.status === 403 &&
+        error.response?.data?.message?.includes('Account has not been approved yet')
+      ) {
         return {
           success: false,
           status: 'pending_approval',
           message: error.response?.data?.message || 'Your account is pending approval.',
         }
       }
-      
+
       return {
         success: false,
         message: error.response?.data?.message || 'Unable to sign in. Please try again.',
@@ -128,9 +135,8 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await axios.post(`/auth/register`, payload)
       const responseData = response?.data || {}
 
-      const registrationSucceeded = responseData.success !== undefined
-        ? responseData.success
-        : !responseData.error
+      const registrationSucceeded =
+        responseData.success !== undefined ? responseData.success : !responseData.error
 
       if (!registrationSucceeded) {
         return {

@@ -1,7 +1,7 @@
 <script setup>
 import CustomerAccountCompactCard from '@/components/molecules/CustomerAccountCompactCard.vue'
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   title: {
@@ -22,14 +22,14 @@ function getAccountTypeStyle(type) {
     case 'SAVINGS':
       return {
         icon: 'pi pi-star-fill',
-        accent: 'bg-sky-100'
-      };
+        accent: 'bg-sky-100',
+      }
     case 'CHECKING':
     default:
       return {
         icon: 'pi pi-credit-card',
-        accent: 'bg-orange-100'
-      };
+        accent: 'bg-orange-100',
+      }
   }
 }
 
@@ -37,7 +37,7 @@ function getAccountTypeStyle(type) {
  * Map account data for display
  */
 function mapAccountForDisplay(account) {
-  const { icon, accent } = getAccountTypeStyle(account.type);
+  const { icon, accent } = getAccountTypeStyle(account.type)
   return {
     id: account.id,
     title: account.title ?? 'My Account',
@@ -47,7 +47,7 @@ function mapAccountForDisplay(account) {
     icon: icon,
     pending: account.status === 'PENDING_APPROVAL',
     accent: account.status === 'PENDING_APPROVAL' ? 'bg-slate-100' : accent,
-  };
+  }
 }
 
 // Map accounts for display

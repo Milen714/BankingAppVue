@@ -20,9 +20,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <article class="rounded-lg border border-slate-300 bg-white px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.02)]">
+  <article
+    class="rounded-lg border border-slate-300 bg-white px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.02)]"
+  >
     <div class="flex items-start gap-4">
-      <div :class="[props.iconBg, 'flex h-18 w-18 shrink-0 items-center justify-center rounded-2xl']">
+      <div
+        :class="[props.iconBg, 'flex h-18 w-18 shrink-0 items-center justify-center rounded-2xl']"
+      >
         <i :class="[props.icon, 'text-3xl text-slate-700']"></i>
       </div>
 

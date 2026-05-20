@@ -44,14 +44,22 @@ const props = defineProps({
           <h3 class="text-xl font-semibold text-slate-900">{{ title }}</h3>
           <p class="mt-1 font-mono text-xs tracking-[0.18em] text-slate-600">{{ iban }}</p>
         </div>
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#f8e6de] text-[#b04a12]">
+        <span
+          class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#f8e6de] text-[#b04a12]"
+        >
           <i :class="icon"></i>
         </span>
       </div>
 
       <p class="mt-6 text-4xl font-semibold text-slate-900">{{ balance }}</p>
-      <p class="mt-2 inline-flex items-center gap-1 text-xs font-medium" :class="pending ? 'text-orange-600' : 'text-emerald-700'">
-        <span class="h-1.5 w-1.5 rounded-full" :class="pending ? 'bg-orange-500' : 'bg-emerald-500'"></span>
+      <p
+        class="mt-2 inline-flex items-center gap-1 text-xs font-medium"
+        :class="pending ? 'text-orange-600' : 'text-emerald-700'"
+      >
+        <span
+          class="h-1.5 w-1.5 rounded-full"
+          :class="pending ? 'bg-orange-500' : 'bg-emerald-500'"
+        ></span>
         {{ status }}
       </p>
     </div>

@@ -37,7 +37,8 @@ const handleContactSupport = () => {
 
       <!-- Description -->
       <p class="mb-6 text-center text-sm text-slate-600">
-        Thank you for registering with DMT Bank. Your account is currently under review by our verification team to ensure regulatory compliance and security.
+        Thank you for registering with DMT Bank. Your account is currently under review by our
+        verification team to ensure regulatory compliance and security.
       </p>
 
       <!-- Next Steps Section -->
@@ -47,7 +48,8 @@ const handleContactSupport = () => {
           <div>
             <p class="font-semibold text-slate-900">Next Steps</p>
             <p class="mt-1 text-sm text-slate-700">
-              Our team is currently reviewing your information. You will receive an email notification once your account has been approved and is ready for use.
+              Our team is currently reviewing your information. You will receive an email
+              notification once your account has been approved and is ready for use.
             </p>
           </div>
         </div>
@@ -84,7 +86,9 @@ const handleContactSupport = () => {
       </div>
 
       <!-- Security badges -->
-      <div class="mt-6 flex justify-center gap-4 border-t border-slate-200 pt-4 text-center text-xs text-slate-500">
+      <div
+        class="mt-6 flex justify-center gap-4 border-t border-slate-200 pt-4 text-center text-xs text-slate-500"
+      >
         <div class="flex items-center gap-1">
           <i class="pi pi-lock text-xs"></i>
           <span>AES-256 Encrypted</span>

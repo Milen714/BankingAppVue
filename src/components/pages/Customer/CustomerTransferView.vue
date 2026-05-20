@@ -7,14 +7,16 @@ import { useBankAccountStore } from '@/stores/bankAccount'
 
 const bankAccountStore = useBankAccountStore()
 
-onMounted(async() => {
-   await bankAccountStore.fetchMyBankAccounts()
+onMounted(async () => {
+  await bankAccountStore.fetchMyBankAccounts()
 })
-const currentAccounts = computed(() => bankAccountStore.myCurrentAccounts.map(account => ({
-  title: account.title?? 'My Account',
-  iban: account.iban,
-  balance: `EUR ${account.balance.toFixed(2)}`
-})))
+const currentAccounts = computed(() =>
+  bankAccountStore.myCurrentAccounts.map(account => ({
+    title: account.title ?? 'My Account',
+    iban: account.iban,
+    balance: `EUR ${account.balance.toFixed(2)}`,
+  }))
+)
 
 const handleTransferSuccess = () => {
   console.log('Transfer completed successfully')
@@ -23,23 +25,35 @@ const handleTransferSuccess = () => {
 
 <template>
   <section class="bg-[#f6efec]">
-    <div class="mx-auto flex min-h-[calc(100vh-60px)] ">
+    <div class="mx-auto flex min-h-[calc(100vh-60px)]">
       <CustomerSidebarNav />
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
         <PortalHeader
           :title="'New Transfer'"
           :buttons="[
-            { label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
-            { label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
+            {
+              label: 'Request New Account',
+              icon: 'pi pi-plus-circle',
+              type: 'secondary',
+              linkTo: '/customer/request-account',
+            },
+            {
+              label: 'Withdraw Funds',
+              icon: 'pi pi-money-bill',
+              type: 'primary',
+              linkTo: '/customer/withdraw',
+            },
           ]"
         />
 
         <!-- Transfer Form -->
         <div class="mt-6 max-w-2xl rounded-lg bg-white p-6">
-          <BankingForm 
-          :type="'TRANSFER'"
-          :accounts="currentAccounts" @success="handleTransferSuccess" />
+          <BankingForm
+            :type="'TRANSFER'"
+            :accounts="currentAccounts"
+            @success="handleTransferSuccess"
+          />
         </div>
       </div>
     </div>

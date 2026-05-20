@@ -98,7 +98,9 @@ const closeSuccessModal = () => {
           "
         >
           <div class="flex items-start gap-3">
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#f8e6de] text-[#cc570f]">
+            <span
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#f8e6de] text-[#cc570f]"
+            >
               <i :class="type.icon"></i>
             </span>
             <div>
@@ -150,8 +152,8 @@ const closeSuccessModal = () => {
         <div>
           <p class="font-semibold text-slate-900">Note on Approval</p>
           <p class="mt-1 text-sm text-slate-700">
-            The new account will be automatically linked to your profile upon internal approval. Most accounts are
-            activated within 24 hours.
+            The new account will be automatically linked to your profile upon internal approval.
+            Most accounts are activated within 24 hours.
           </p>
         </div>
       </div>
@@ -174,7 +176,10 @@ const closeSuccessModal = () => {
   </form>
 
   <!-- Success Modal -->
-  <div v-if="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div
+    v-if="showSuccessModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  >
     <div class="w-full max-w-md rounded-lg bg-white px-6 py-8">
       <div class="mb-4 flex justify-center">
         <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
@@ -187,7 +192,8 @@ const closeSuccessModal = () => {
       <p class="mb-6 text-center text-slate-600">{{ successMessage }}</p>
 
       <p class="mb-6 text-center text-sm text-slate-600">
-        You will receive an email notification once your account has been approved and is ready for use.
+        You will receive an email notification once your account has been approved and is ready for
+        use.
       </p>
 
       <button

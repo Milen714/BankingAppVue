@@ -77,7 +77,7 @@ const emit = defineEmits([
   'blur-field',
 ])
 
-const inputClasses = (hasError) => {
+const inputClasses = hasError => {
   return hasError ? 'border-rose-300' : 'border-[#e2c4b8]'
 }
 </script>
@@ -92,7 +92,9 @@ const inputClasses = (hasError) => {
     <form class="mt-6 space-y-4" novalidate @submit.prevent="emit('submit')">
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="firstName">First Name</label>
+          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="firstName"
+            >First Name</label
+          >
           <input
             id="firstName"
             :value="props.firstName"
@@ -103,12 +105,16 @@ const inputClasses = (hasError) => {
             @input="emit('update:firstName', $event.target.value)"
             @focus="emit('focus-field', 'firstName')"
             @blur="emit('blur-field')"
-          >
-          <p v-if="props.visibleErrors.firstName" class="mt-1.5 text-xs text-rose-600">{{ props.errors.firstName }}</p>
+          />
+          <p v-if="props.visibleErrors.firstName" class="mt-1.5 text-xs text-rose-600">
+            {{ props.errors.firstName }}
+          </p>
         </div>
 
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="lastName">Last Name</label>
+          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="lastName"
+            >Last Name</label
+          >
           <input
             id="lastName"
             :value="props.lastName"
@@ -119,13 +125,17 @@ const inputClasses = (hasError) => {
             @input="emit('update:lastName', $event.target.value)"
             @focus="emit('focus-field', 'lastName')"
             @blur="emit('blur-field')"
-          >
-          <p v-if="props.visibleErrors.lastName" class="mt-1.5 text-xs text-rose-600">{{ props.errors.lastName }}</p>
+          />
+          <p v-if="props.visibleErrors.lastName" class="mt-1.5 text-xs text-rose-600">
+            {{ props.errors.lastName }}
+          </p>
         </div>
       </div>
 
       <div>
-        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="email">Email Address</label>
+        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="email"
+          >Email Address</label
+        >
         <input
           id="email"
           :value="props.email"
@@ -136,13 +146,17 @@ const inputClasses = (hasError) => {
           @input="emit('update:email', $event.target.value)"
           @focus="emit('focus-field', 'email')"
           @blur="emit('blur-field')"
-        >
-        <p v-if="props.visibleErrors.email" class="mt-1.5 text-xs text-rose-600">{{ props.errors.email }}</p>
+        />
+        <p v-if="props.visibleErrors.email" class="mt-1.5 text-xs text-rose-600">
+          {{ props.errors.email }}
+        </p>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="phoneNumber">Phone Number</label>
+          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="phoneNumber"
+            >Phone Number</label
+          >
           <input
             id="phoneNumber"
             :value="props.phoneNumber"
@@ -153,12 +167,16 @@ const inputClasses = (hasError) => {
             @input="emit('update:phoneNumber', $event.target.value)"
             @focus="emit('focus-field', 'phoneNumber')"
             @blur="emit('blur-field')"
-          >
-          <p v-if="props.visibleErrors.phoneNumber" class="mt-1.5 text-xs text-rose-600">{{ props.errors.phoneNumber }}</p>
+          />
+          <p v-if="props.visibleErrors.phoneNumber" class="mt-1.5 text-xs text-rose-600">
+            {{ props.errors.phoneNumber }}
+          </p>
         </div>
 
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="bsnNumber">BSN Number</label>
+          <label class="mb-1.5 block text-sm font-medium text-slate-800" for="bsnNumber"
+            >BSN Number</label
+          >
           <input
             id="bsnNumber"
             :value="props.bsnNumber"
@@ -169,13 +187,17 @@ const inputClasses = (hasError) => {
             @input="emit('update:bsnNumber', $event.target.value)"
             @focus="emit('focus-field', 'bsnNumber')"
             @blur="emit('blur-field')"
-          >
-          <p v-if="props.visibleErrors.bsnNumber" class="mt-1.5 text-xs text-rose-600">{{ props.errors.bsnNumber }}</p>
+          />
+          <p v-if="props.visibleErrors.bsnNumber" class="mt-1.5 text-xs text-rose-600">
+            {{ props.errors.bsnNumber }}
+          </p>
         </div>
       </div>
 
       <div>
-        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="password">Password</label>
+        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="password"
+          >Password</label
+        >
         <div
           class="flex items-center rounded-lg border bg-[#f6f2f1] px-3"
           :class="inputClasses(props.visibleErrors.password)"
@@ -189,7 +211,7 @@ const inputClasses = (hasError) => {
             @input="emit('update:password', $event.target.value)"
             @focus="emit('focus-field', 'password')"
             @blur="emit('blur-field')"
-          >
+          />
           <button
             type="button"
             class="ml-2 text-slate-500 transition-colors hover:text-slate-700"
@@ -198,7 +220,9 @@ const inputClasses = (hasError) => {
             <i :class="props.showPassword ? 'pi pi-eye' : 'pi pi-eye-slash'"></i>
           </button>
         </div>
-        <p v-if="props.visibleErrors.password" class="mt-1.5 text-xs text-rose-600">{{ props.errors.password }}</p>
+        <p v-if="props.visibleErrors.password" class="mt-1.5 text-xs text-rose-600">
+          {{ props.errors.password }}
+        </p>
 
         <ul class="mt-2 grid gap-1 text-xs sm:grid-cols-2">
           <li
@@ -207,14 +231,19 @@ const inputClasses = (hasError) => {
             class="inline-flex items-center gap-1.5"
             :class="item.valid ? 'text-emerald-700' : 'text-slate-500'"
           >
-            <i :class="item.valid ? 'pi pi-check-circle' : 'pi pi-circle'" class="text-[0.72rem]"></i>
+            <i
+              :class="item.valid ? 'pi pi-check-circle' : 'pi pi-circle'"
+              class="text-[0.72rem]"
+            ></i>
             <span>{{ item.text }}</span>
           </li>
         </ul>
       </div>
 
       <div>
-        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="confirmPassword">Confirm Password</label>
+        <label class="mb-1.5 block text-sm font-medium text-slate-800" for="confirmPassword"
+          >Confirm Password</label
+        >
         <div
           class="flex items-center rounded-lg border bg-[#f6f2f1] px-3"
           :class="inputClasses(props.visibleErrors.confirmPassword)"
@@ -228,7 +257,7 @@ const inputClasses = (hasError) => {
             @input="emit('update:confirmPassword', $event.target.value)"
             @focus="emit('focus-field', 'confirmPassword')"
             @blur="emit('blur-field')"
-          >
+          />
           <button
             type="button"
             class="ml-2 text-slate-500 transition-colors hover:text-slate-700"
@@ -237,7 +266,9 @@ const inputClasses = (hasError) => {
             <i :class="props.showConfirmPassword ? 'pi pi-eye' : 'pi pi-eye-slash'"></i>
           </button>
         </div>
-        <p v-if="props.visibleErrors.confirmPassword" class="mt-1.5 text-xs text-rose-600">{{ props.errors.confirmPassword }}</p>
+        <p v-if="props.visibleErrors.confirmPassword" class="mt-1.5 text-xs text-rose-600">
+          {{ props.errors.confirmPassword }}
+        </p>
       </div>
 
       <button
@@ -252,7 +283,11 @@ const inputClasses = (hasError) => {
       <p
         v-if="props.statusMessage"
         class="rounded-lg border px-3 py-2 text-sm"
-        :class="props.statusType === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-rose-200 bg-rose-50 text-rose-700'"
+        :class="
+          props.statusType === 'success'
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+            : 'border-rose-200 bg-rose-50 text-rose-700'
+        "
       >
         {{ props.statusMessage }}
       </p>

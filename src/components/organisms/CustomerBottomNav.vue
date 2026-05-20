@@ -9,7 +9,9 @@ const items = [
 </script>
 
 <template>
-  <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-[#f5f6f7] px-2 py-2 md:hidden">
+  <nav
+    class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-[#f5f6f7] px-2 py-2 md:hidden"
+  >
     <ul class="grid grid-cols-5 gap-1">
       <li v-for="item in items" :key="item.key">
         <button

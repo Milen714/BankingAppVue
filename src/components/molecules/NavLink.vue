@@ -6,22 +6,22 @@ const uiStore = useUIStore()
 const props = defineProps({
   to: {
     type: String,
-    required: true
+    required: true,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
   isActive: {
     type: Boolean,
     required: false,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const handleClick = () => {
@@ -35,7 +35,11 @@ const handleClick = () => {
   <RouterLink
     :to="props.to"
     class="inline-flex items-center rounded-lg px-3 py-2 text-sm font-semibold transition-colors duration-150"
-    :class="props.isActive ? 'text-blue-700 md:border-b-2 md:border-blue-700' : 'text-slate-600 hover:text-slate-900'"
+    :class="
+      props.isActive
+        ? 'text-blue-700 md:border-b-2 md:border-blue-700'
+        : 'text-slate-600 hover:text-slate-900'
+    "
     :aria-current="props.isActive ? 'page' : undefined"
     @click="handleClick"
   >

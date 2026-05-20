@@ -21,8 +21,18 @@ const handleFormSuccess = () => {
         <PortalHeader
           :title="'Request New Account'"
           :buttons="[
-            { label: 'New Transfer', icon: 'pi pi-send', type: 'primary', linkTo: '/customer/transfer' },
-            { label: 'Withdraw Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/withdraw' },
+            {
+              label: 'New Transfer',
+              icon: 'pi pi-send',
+              type: 'primary',
+              linkTo: '/customer/transfer',
+            },
+            {
+              label: 'Withdraw Funds',
+              icon: 'pi pi-money-bill',
+              type: 'primary',
+              linkTo: '/customer/withdraw',
+            },
           ]"
         />
 

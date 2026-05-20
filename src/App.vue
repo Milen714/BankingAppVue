@@ -1,5 +1,5 @@
 <script setup>
-import MainNavBar from './components/organisms/MainNavBar.vue';
+import MainNavBar from './components/organisms/MainNavBar.vue'
 </script>
 
 <template>

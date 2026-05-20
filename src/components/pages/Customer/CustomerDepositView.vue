@@ -7,14 +7,16 @@ import { useBankAccountStore } from '@/stores/bankAccount'
 
 const bankAccountStore = useBankAccountStore()
 
-onMounted(async() => {
-   await bankAccountStore.fetchMyBankAccounts()
+onMounted(async () => {
+  await bankAccountStore.fetchMyBankAccounts()
 })
-const myAccounts = computed(() => bankAccountStore.myAccounts.map(account => ({
-  title: account.title?? 'My Account',
-  iban: account.iban,
-  balance: `EUR ${account.balance.toFixed(2)}`
-})))
+const myAccounts = computed(() =>
+  bankAccountStore.myAccounts.map(account => ({
+    title: account.title ?? 'My Account',
+    iban: account.iban,
+    balance: `EUR ${account.balance.toFixed(2)}`,
+  }))
+)
 
 const handleDepositSuccess = () => {
   console.log('Deposit completed successfully')
@@ -23,23 +25,31 @@ const handleDepositSuccess = () => {
 
 <template>
   <section class="bg-[#f6efec]">
-    <div class="mx-auto flex min-h-[calc(100vh-60px)] ">
+    <div class="mx-auto flex min-h-[calc(100vh-60px)]">
       <CustomerSidebarNav />
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
         <PortalHeader
           :title="'Deposit Funds'"
           :buttons="[
-            { label: 'Request New Account', icon: 'pi pi-plus-circle', type: 'secondary', linkTo: '/customer/request-account' },
-            { label: 'Transfer Funds', icon: 'pi pi-money-bill', type: 'primary', linkTo: '/customer/transfer' },
+            {
+              label: 'Request New Account',
+              icon: 'pi pi-plus-circle',
+              type: 'secondary',
+              linkTo: '/customer/request-account',
+            },
+            {
+              label: 'Transfer Funds',
+              icon: 'pi pi-money-bill',
+              type: 'primary',
+              linkTo: '/customer/transfer',
+            },
           ]"
         />
 
         <!-- Deposit Form -->
         <div class="mt-6 max-w-2xl rounded-lg bg-white p-6">
-          <BankingForm 
-          :type="'DEPOSIT'"
-          :accounts="myAccounts" @success="handleDepositSuccess" />
+          <BankingForm :type="'DEPOSIT'" :accounts="myAccounts" @success="handleDepositSuccess" />
         </div>
       </div>
     </div>

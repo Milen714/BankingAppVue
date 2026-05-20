@@ -83,12 +83,12 @@ const handleSubmit = async () => {
     statusType.value = 'success'
     statusMessage.value = result.message || 'Signed in successfully.'
     isLoading.value = false
-    
+
     // Ensure user is loaded before checking role
     if (!authStore.user) {
       await authStore.fetchLoggedInUser()
     }
-    
+
     if (authStore.user?.role === 'ROLE_CUSTOMER') {
       await router.push('/customer')
       return
@@ -97,7 +97,7 @@ const handleSubmit = async () => {
       await router.push('/employee')
       return
     }
-    
+
     return
   }
 
@@ -106,7 +106,7 @@ const handleSubmit = async () => {
   isLoading.value = false
 }
 
-const handleFocus = (fieldName) => {
+const handleFocus = fieldName => {
   focusedField.value = fieldName
 }
 
@@ -166,9 +166,6 @@ const handleModalClose = () => {
     </div>
 
     <!-- Pending Approval Modal -->
-    <PendingApprovalModal
-      :is-open="showPendingApprovalModal"
-      @close="handleModalClose"
-    />
+    <PendingApprovalModal :is-open="showPendingApprovalModal" @close="handleModalClose" />
   </section>
 </template>

@@ -7,8 +7,8 @@ import { useBankAccountStore } from '@/stores/bankAccount'
 
 const bankAccountStore = useBankAccountStore()
 
-onMounted(async() => {
-   await bankAccountStore.fetchMyBankAccounts()
+onMounted(async () => {
+  await bankAccountStore.fetchMyBankAccounts()
 })
 
 const router = useRouter()
@@ -18,7 +18,7 @@ const props = defineProps({
   type: {
     type: String,
     required: true,
-    validator: (value) => ['WITHDRAWAL', 'DEPOSIT', 'TRANSFER'].includes(value),
+    validator: value => ['WITHDRAWAL', 'DEPOSIT', 'TRANSFER'].includes(value),
   },
   accounts: {
     type: Array,
@@ -73,7 +73,7 @@ const amountError = computed(() => {
   if (isNaN(amountNum) || amountNum <= 0) {
     return 'Amount must be greater than 0'
   }
-  
+
   // For DEPOSIT, no balance check needed
   if (props.type === 'DEPOSIT') {
     if (amountNum > 10000) {
@@ -90,11 +90,11 @@ const amountError = computed(() => {
       return `Insufficient funds. Available: EUR ${balance.toFixed(2)}`
     }
   }
-  
+
   if (amountNum > 10000) {
     return `Maximum ${props.type === 'WITHDRAWAL' ? 'withdrawal' : 'transfer'} amount is EUR 10,000`
   }
-  
+
   return ''
 })
 
@@ -126,9 +126,9 @@ const getSelectedAccountName = () => {
 
 const getOperationLabel = () => {
   const labels = {
-    'DEPOSIT': 'Deposit',
-    'TRANSFER': 'Transfer',
-    'WITHDRAWAL': 'Withdrawal'
+    DEPOSIT: 'Deposit',
+    TRANSFER: 'Transfer',
+    WITHDRAWAL: 'Withdrawal',
   }
   return labels[props.type] || 'Transaction'
 }
@@ -148,7 +148,7 @@ const getToAccountLabel = () => {
   return 'RECIPIENT IBAN'
 }
 
-const openConfirmationModal = (e) => {
+const openConfirmationModal = e => {
   e.preventDefault()
   if (!isFormValid.value) return
   showConfirmationModal.value = true
@@ -213,7 +213,8 @@ const handleTransfer = async () => {
     emit('success')
   } catch (error) {
     console.error(`Error processing ${props.type.toLowerCase()}:`, error)
-    errorMessage.value = error.message || `An error occurred while processing the ${props.type.toLowerCase()}.`
+    errorMessage.value =
+      error.message || `An error occurred while processing the ${props.type.toLowerCase()}.`
     showErrorModal.value = true
   } finally {
     isLoading.value = false
@@ -235,7 +236,9 @@ const closeSuccessModal = () => {
   <form @submit="openConfirmationModal" class="space-y-6">
     <!-- From Account Selection (TRANSFER & WITHDRAWAL only) -->
     <div v-if="props.type !== 'DEPOSIT'">
-      <label class="mb-2 block text-sm font-semibold text-slate-900">{{ getFromAccountLabel() }}</label>
+      <label class="mb-2 block text-sm font-semibold text-slate-900">{{
+        getFromAccountLabel()
+      }}</label>
       <select
         v-model="fromIban"
         class="w-full rounded-lg border border-[#e7c9bd] bg-white px-4 py-2.5 text-slate-900 transition-colors focus:border-[#cc570f] focus:outline-none focus:ring-2 focus:ring-[#cc570f]/20"
@@ -279,7 +282,8 @@ const closeSuccessModal = () => {
         <div>
           <p class="font-semibold text-slate-900">Secure {{ getOperationLabel() }}</p>
           <p class="mt-1 text-sm text-slate-700">
-            All {{ props.type.toLowerCase() }}s are encrypted and monitored for security. You will receive a confirmation email once the transaction is processed.
+            All {{ props.type.toLowerCase() }}s are encrypted and monitored for security. You will
+            receive a confirmation email once the transaction is processed.
           </p>
         </div>
       </div>
@@ -302,7 +306,10 @@ const closeSuccessModal = () => {
   </form>
 
   <!-- Confirmation Modal -->
-  <div v-if="showConfirmationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div
+    v-if="showConfirmationModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  >
     <div class="w-full max-w-md rounded-lg bg-white p-6">
       <h2 class="mb-4 text-2xl font-bold text-slate-900">Confirm {{ getOperationLabel() }}</h2>
 
@@ -318,15 +325,22 @@ const closeSuccessModal = () => {
         </div>
 
         <!-- To IBAN (TRANSFER & DEPOSIT) -->
-        <div v-if="props.type !== 'WITHDRAWAL'" class="flex justify-between border-t border-slate-300 pt-4">
-          <span class="text-slate-600">{{ props.type === 'DEPOSIT' ? 'Deposit Into IBAN:' : 'Recipient IBAN:' }}</span>
+        <div
+          v-if="props.type !== 'WITHDRAWAL'"
+          class="flex justify-between border-t border-slate-300 pt-4"
+        >
+          <span class="text-slate-600">{{
+            props.type === 'DEPOSIT' ? 'Deposit Into IBAN:' : 'Recipient IBAN:'
+          }}</span>
           <span class="font-mono text-sm text-slate-900">{{ toIban }}</span>
         </div>
 
         <!-- Amount -->
         <div class="flex justify-between border-t border-slate-300 pt-4">
           <span class="text-lg font-semibold text-slate-900">Amount:</span>
-          <span class="text-2xl font-bold text-[#cc570f]">EUR {{ parseFloat(amount).toFixed(2) }}</span>
+          <span class="text-2xl font-bold text-[#cc570f]"
+            >EUR {{ parseFloat(amount).toFixed(2) }}</span
+          >
         </div>
       </div>
 
@@ -350,7 +364,10 @@ const closeSuccessModal = () => {
   </div>
 
   <!-- Success Modal -->
-  <div v-if="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div
+    v-if="showSuccessModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  >
     <div class="w-full max-w-md rounded-lg bg-white px-6 py-8">
       <div class="mb-4 flex justify-center">
         <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
@@ -358,9 +375,13 @@ const closeSuccessModal = () => {
         </div>
       </div>
 
-      <h2 class="mb-2 text-center text-2xl font-bold text-slate-900">{{ getOperationLabel() }} Successful</h2>
+      <h2 class="mb-2 text-center text-2xl font-bold text-slate-900">
+        {{ getOperationLabel() }} Successful
+      </h2>
 
-      <p class="mb-6 text-center text-slate-600">Your {{ props.type.toLowerCase() }} has been processed successfully.</p>
+      <p class="mb-6 text-center text-slate-600">
+        Your {{ props.type.toLowerCase() }} has been processed successfully.
+      </p>
 
       <div v-if="successDetails" class="space-y-3 rounded-lg bg-[#f3f4f6] p-4">
         <!-- From Account (TRANSFER & WITHDRAWAL) -->
@@ -371,14 +392,18 @@ const closeSuccessModal = () => {
 
         <!-- To IBAN (TRANSFER & DEPOSIT) -->
         <div v-if="props.type !== 'WITHDRAWAL'" class="flex justify-between">
-          <span class="text-sm text-slate-600">{{ props.type === 'DEPOSIT' ? 'Deposit Into:' : 'Recipient IBAN:' }}</span>
+          <span class="text-sm text-slate-600">{{
+            props.type === 'DEPOSIT' ? 'Deposit Into:' : 'Recipient IBAN:'
+          }}</span>
           <span class="text-sm font-mono text-slate-900">{{ successDetails.toIban }}</span>
         </div>
 
         <!-- Amount -->
         <div class="flex justify-between border-t border-slate-300 pt-3">
           <span class="text-sm font-semibold text-slate-900">Amount:</span>
-          <span class="text-lg font-bold text-[#cc570f]">EUR {{ successDetails.amount.toFixed(2) }}</span>
+          <span class="text-lg font-bold text-[#cc570f]"
+            >EUR {{ successDetails.amount.toFixed(2) }}</span
+          >
         </div>
 
         <!-- Timestamp -->
@@ -402,7 +427,10 @@ const closeSuccessModal = () => {
   </div>
 
   <!-- Error Modal -->
-  <div v-if="showErrorModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div
+    v-if="showErrorModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+  >
     <div class="w-full max-w-md rounded-lg bg-white p-6">
       <div class="mb-4 flex items-center justify-center">
         <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
@@ -410,7 +438,9 @@ const closeSuccessModal = () => {
         </div>
       </div>
 
-      <h2 class="mb-2 text-center text-2xl font-bold text-slate-900">{{ getOperationLabel() }} Failed</h2>
+      <h2 class="mb-2 text-center text-2xl font-bold text-slate-900">
+        {{ getOperationLabel() }} Failed
+      </h2>
       <p class="mb-6 text-center text-slate-600">{{ errorMessage }}</p>
 
       <button

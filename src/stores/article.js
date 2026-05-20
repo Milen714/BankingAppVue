@@ -26,17 +26,16 @@ export const useArticleStore = defineStore('article', () => {
   async function fetchArticles() {
     // TODO: request articles, handle errors, and update articles.value
     // TODO: handle loading and error states
-    loading.value = true;
-    error.value = null;
+    loading.value = true
+    error.value = null
     try {
-      const response = await axios.get('/articles');
-      articles.value = response.data;
+      const response = await axios.get('/articles')
+      articles.value = response.data
     } catch (err) {
-      error.value = 'Failed to fetch articles. Please try again later.';
+      error.value = 'Failed to fetch articles. Please try again later.'
     } finally {
-      loading.value = false;
+      loading.value = false
     }
-
   }
 
   /**
@@ -46,19 +45,17 @@ export const useArticleStore = defineStore('article', () => {
   async function fetchArticleById(articleId) {
     // TODO: request article by ID, handle errors, and update currentArticle.value
     // TODO: handle loading and error states
-    loading.value = true;
-    error.value = null;
+    loading.value = true
+    error.value = null
     try {
-      const response = await axios.get(`/articles/${articleId}`);
-      currentArticle.value = response.data;
+      const response = await axios.get(`/articles/${articleId}`)
+      currentArticle.value = response.data
     } catch (err) {
-      error.value = 'Failed to fetch article. Please try again later.';
+      error.value = 'Failed to fetch article. Please try again later.'
     } finally {
-      loading.value = false;
+      loading.value = false
     }
   }
-
-
 
   return {
     // State

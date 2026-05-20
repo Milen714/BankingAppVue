@@ -7,7 +7,7 @@ export const passwordRequirements = {
   uppercase: /[A-Z]/,
   lowercase: /[a-z]/,
   number: /\d/,
-  special: /[\W_]/
+  special: /[\W_]/,
 }
 
 /**
@@ -21,7 +21,7 @@ export function validatePassword(password) {
     uppercase: passwordRequirements.uppercase.test(password),
     lowercase: passwordRequirements.lowercase.test(password),
     number: passwordRequirements.number.test(password),
-    special: passwordRequirements.special.test(password)
+    special: passwordRequirements.special.test(password),
   }
 }
 
@@ -42,32 +42,32 @@ export function isPasswordStrong(password) {
  */
 export function getPasswordFeedback(password) {
   const checks = validatePassword(password)
-  
+
   return [
     {
       id: 'length',
       text: `At least ${passwordRequirements.minLength} characters`,
-      valid: checks.length
+      valid: checks.length,
     },
     {
       id: 'uppercase',
       text: 'Contains an uppercase letter',
-      valid: checks.uppercase
+      valid: checks.uppercase,
     },
     {
       id: 'lowercase',
       text: 'Contains a lowercase letter',
-      valid: checks.lowercase
+      valid: checks.lowercase,
     },
     {
       id: 'number',
       text: 'Contains a number',
-      valid: checks.number
+      valid: checks.number,
     },
     {
       id: 'special',
       text: 'Contains a special character',
-      valid: checks.special
-    }
+      valid: checks.special,
+    },
   ]
 }
