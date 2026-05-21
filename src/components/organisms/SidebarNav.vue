@@ -1,0 +1,102 @@
+<script setup>
+import { computed } from 'vue'
+import router from '@/router'
+import { RouterLink, useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const route = useRoute()
+const isActive = path => route.path === path
+
+const items = computed(() => {
+  if (authStore.isEmployee) {
+    return [
+      { key: 'Dashboard', label: 'Dashboard', icon: 'pi pi-th-large', route: '/employee' },
+      {
+        key: 'Pending Accounts',
+        label: 'Pending Accounts',
+        icon: 'pi pi-building-columns',
+        route: '/employee/accounts',
+      },
+      {
+        key: 'Pending Users',
+        label: 'Pending Users',
+        icon: 'pi pi-user-plus',
+        route: '/employee/users',
+      },
+      {
+        key: 'Transactions',
+        label: 'Transactions',
+        icon: 'pi pi-receipt',
+        route: '/employee/transactions',
+      },
+    ]
+  } else {
+    return [
+      { key: 'Overview', label: 'Overview', icon: 'pi pi-th-large', route: '/customer' },
+      {
+        key: 'Bank Accounts',
+        label: 'Bank Accounts',
+        icon: 'pi pi-building-columns',
+        route: '/customer/accounts',
+      },
+      {
+        key: 'Transfers',
+        label: 'Transfers',
+        icon: 'pi pi-arrow-right-arrow-left',
+        route: '/customer/transfers',
+      },
+      {
+        key: 'Transactions',
+        label: 'Transactions',
+        icon: 'pi pi-receipt',
+        route: '/customer/transactions',
+      },
+    ]
+  }
+})
+</script>
+
+<template>
+  <aside
+    class="hidden w-[250px] shrink-0 border-r border-slate-200 bg-[#f5f6f7] md:flex md:flex-col"
+  >
+    <div class="border-b border-slate-200 px-5 py-5">
+      <p class="text-2xl font-semibold text-slate-900">
+        {{ authStore.isEmployee ? 'Employee Portal' : 'Customer Portal' }}
+      </p>
+      <p class="text-sm text-slate-500">Secure Banking</p>
+    </div>
+
+    <nav class="flex-1 px-3 py-5">
+      <ul class="space-y-1.5">
+        <li v-for="item in items" :key="item.key">
+          <RouterLink
+            :to="item.route"
+            type="button"
+            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium"
+            :class="
+              isActive(item.route)
+                ? 'bg-[#f3e4dc] text-[#cc570f]'
+                : 'text-slate-600 hover:bg-slate-100'
+            "
+          >
+            <i :class="[item.icon, 'text-sm']"></i>
+            {{ item.label }}
+          </RouterLink>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="border-t border-slate-200 px-4 py-4">
+      <RouterLink
+        to="/customer/profileSettings"
+        type="button"
+        class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+      >
+        <i class="pi pi-cog"></i>
+        Settings
+      </RouterLink>
+    </div>
+  </aside>
+</template>

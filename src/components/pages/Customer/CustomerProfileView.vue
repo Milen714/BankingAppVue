@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
+import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import FormGroup from '@/components/molecules/FormGroup.vue'

@@ -1,5 +1,5 @@
 <script setup>
-import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
+import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import BankingForm from '@/components/organisms/BankingForm.vue'
 import { onMounted, computed } from 'vue'

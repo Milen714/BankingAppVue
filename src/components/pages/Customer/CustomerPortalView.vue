@@ -1,5 +1,5 @@
 <script setup>
-import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
+import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import CustomerAccountsList from '@/components/organisms/CustomerAccountsList.vue'

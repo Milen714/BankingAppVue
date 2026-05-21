@@ -1,5 +1,5 @@
 <script setup>
-import CustomerSidebarNav from '@/components/organisms/CustomerSidebarNav.vue'
+import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import RequestAccountForm from '@/components/organisms/RequestAccountForm.vue'
 import { useRouter } from 'vue-router'

@@ -7,6 +7,7 @@ let responseInterceptorInitialized = false
 export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref(null)
+  const isEmployee = computed(() => user.value?.role === 'ROLE_EMPLOYEE')
   const token = ref(getAuthToken())
   const loading = ref(false)
   const isLoggedIn = computed(() => !!user.value)
@@ -208,6 +209,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     loading,
     isLoggedIn,
+    isEmployee,
     // Actions
     fetchLoggedInUser,
     login,
