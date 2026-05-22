@@ -40,7 +40,7 @@ jobs:
         run: npm run build
         # Fetch the VITE_API_DOMAIN environment variable
         env:
-          VITE_API_DOMAIN: ${{ vars.VITE_API_BASE_URL }}
+          VITE_API_DOMAIN: ${{ vars.VITE_API_DOMAIN  }}
 
       # ./dist is where the production build will be written to, this is similar to what happens when you run npm run dev locally
       - name: Upload artifact
