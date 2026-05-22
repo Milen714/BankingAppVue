@@ -1,17 +1,37 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import FormGroup from '@/components/molecules/FormGroup.vue'
+import RecipientSelector from '@/components/molecules/RecipientSelector.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
 
 const bankAccountStore = useBankAccountStore()
 
 onMounted(async () => {
   await bankAccountStore.fetchMyBankAccounts()
+  const fromIbanParam = route.query.fromIban?.toString() || ''
+
+  if (props.type === 'DEPOSIT') {
+    // For DEPOSIT: fromIban param indicates which account to deposit INTO
+    if (fromIbanParam) {
+      toIban.value = fromIbanParam
+    } else {
+      toIban.value = bankAccountStore.selectedAccount?.iban || ''
+    }
+  } else {
+    if (fromIbanParam) {
+      await bankAccountStore.fetchBankAccountByIban(fromIbanParam)
+      fromIban.value = fromIbanParam
+    } else {
+      bankAccountStore.clearSelectedAccount()
+      fromIban.value = ''
+    }
+  }
 })
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const props = defineProps({
@@ -37,6 +57,7 @@ const showSuccessModal = ref(false)
 const showErrorModal = ref(false)
 const successDetails = ref(null)
 const errorMessage = ref('')
+const recipientInfo = ref(null)
 
 // Form validation
 const ibanRegex = /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/
@@ -197,6 +218,7 @@ const handleTransfer = async () => {
       details.fromAccount = getSelectedAccountName()
       details.fromIban = fromIban.value
       details.toIban = toIban.value
+      details.recipientName = recipientInfo.value?.title || 'Recipient'
     } else if (props.type === 'WITHDRAWAL') {
       details.fromAccount = getSelectedAccountName()
       details.fromIban = fromIban.value
@@ -209,6 +231,7 @@ const handleTransfer = async () => {
     fromIban.value = ''
     toIban.value = ''
     amount.value = ''
+    recipientInfo.value = null
 
     emit('success')
   } catch (error) {
@@ -243,6 +266,15 @@ const closeSuccessModal = () => {
         v-model="fromIban"
         class="w-full rounded-lg border border-[#e7c9bd] bg-white px-4 py-2.5 text-slate-900 transition-colors focus:border-[#cc570f] focus:outline-none focus:ring-2 focus:ring-[#cc570f]/20"
       >
+        <option
+          v-if="bankAccountStore.selectedAccount"
+          :value="bankAccountStore.selectedAccount.iban"
+        >
+          {{ bankAccountStore.selectedAccount.title }} -
+          {{ bankAccountStore.selectedAccount.iban }} ({{
+            bankAccountStore.selectedAccount.balance
+          }})
+        </option>
         <option value="">Select an account</option>
         <option v-for="account in accounts" :key="account.iban" :value="account.iban">
           {{ account.title }} - {{ account.iban }} ({{ account.balance }})
@@ -251,15 +283,37 @@ const closeSuccessModal = () => {
     </div>
 
     <!-- To Account / Recipient IBAN (TRANSFER & DEPOSIT only) -->
-    <FormGroup
-      v-if="props.type !== 'WITHDRAWAL'"
-      v-model="toIban"
-      :label="getToAccountLabel()"
-      type="text"
-      placeholder="e.g., NL05 ILAO 4805 3158 73"
-      :error="ibanError"
-      helper-text="Enter the recipient's IBAN in a valid format"
-    />
+    <div v-if="props.type === 'TRANSFER'">
+      <label class="mb-3 block text-sm font-semibold text-slate-900">SELECT RECIPIENT</label>
+      <RecipientSelector
+        v-model="toIban"
+        :my-accounts="bankAccountStore.myAccounts"
+        :from-iban="fromIban"
+        :disabled="isLoading"
+        @recipient-selected="info => (recipientInfo = info)"
+      />
+    </div>
+
+    <!-- Deposit Into Account (DEPOSIT only) -->
+    <div v-if="props.type === 'DEPOSIT'">
+      <label class="mb-2 block text-sm font-semibold text-slate-900">{{
+        getToAccountLabel()
+      }}</label>
+      <select
+        v-model="toIban"
+        class="w-full rounded-lg border border-[#e7c9bd] bg-white px-4 py-2.5 text-slate-900 transition-colors focus:border-[#cc570f] focus:outline-none focus:ring-2 focus:ring-[#cc570f]/20"
+      >
+        <option value="">Select an account</option>
+        <option
+          v-for="account in bankAccountStore.myAccounts"
+          :key="account.iban"
+          :value="account.iban"
+        >
+          {{ account.title }} - {{ account.iban }} ({{ account.balance }})
+        </option>
+      </select>
+      <p v-if="ibanError" class="mt-1 text-sm text-red-600">{{ ibanError }}</p>
+    </div>
 
     <!-- Amount -->
     <FormGroup
@@ -281,7 +335,14 @@ const closeSuccessModal = () => {
         </span>
         <div>
           <p class="font-semibold text-slate-900">Secure {{ getOperationLabel() }}</p>
-          <p class="mt-1 text-sm text-slate-700">
+          <p
+            v-if="props.type === 'WITHDRAWAL' || props.type === 'DEPOSIT'"
+            class="mt-1 text-sm text-slate-700"
+          >
+            This is a secure ATM simulation environment. Please proceed carefully and verify all
+            details before confirming your transaction.
+          </p>
+          <p v-else class="mt-1 text-sm text-slate-700">
             All {{ props.type.toLowerCase() }}s are encrypted and monitored for security. You will
             receive a confirmation email once the transaction is processed.
           </p>
@@ -329,9 +390,14 @@ const closeSuccessModal = () => {
           v-if="props.type !== 'WITHDRAWAL'"
           class="flex justify-between border-t border-slate-300 pt-4"
         >
-          <span class="text-slate-600">{{
-            props.type === 'DEPOSIT' ? 'Deposit Into IBAN:' : 'Recipient IBAN:'
-          }}</span>
+          <div>
+            <span class="text-slate-600">{{
+              props.type === 'DEPOSIT' ? 'Deposit Into IBAN:' : 'Recipient:'
+            }}</span>
+            <span v-if="recipientInfo" class="block text-sm text-slate-500 mt-1">
+              {{ recipientInfo.title }}
+            </span>
+          </div>
           <span class="font-mono text-sm text-slate-900">{{ toIban }}</span>
         </div>
 
@@ -392,9 +458,14 @@ const closeSuccessModal = () => {
 
         <!-- To IBAN (TRANSFER & DEPOSIT) -->
         <div v-if="props.type !== 'WITHDRAWAL'" class="flex justify-between">
-          <span class="text-sm text-slate-600">{{
-            props.type === 'DEPOSIT' ? 'Deposit Into:' : 'Recipient IBAN:'
-          }}</span>
+          <div>
+            <span class="text-sm text-slate-600">{{
+              props.type === 'DEPOSIT' ? 'Deposit Into:' : 'Recipient:'
+            }}</span>
+            <span v-if="successDetails.recipientName" class="block text-xs text-slate-500 mt-1">
+              {{ successDetails.recipientName }}
+            </span>
+          </div>
           <span class="text-sm font-mono text-slate-900">{{ successDetails.toIban }}</span>
         </div>
 

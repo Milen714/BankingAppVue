@@ -20,6 +20,7 @@ const currentPage = ref(0)
 // Table columns configuration
 const columns = [
   { key: 'iban', label: 'IBAN', sortable: true },
+  { key: 'owner', label: 'Owner', sortable: false },
   { key: 'title', label: 'Title', sortable: true },
   { key: 'type', label: 'Type', sortable: true },
   { key: 'balance', label: 'Balance', sortable: true },

@@ -29,6 +29,11 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     firstName: null,
     lastName: null,
   })
+
+  function clearSelectedAccount() {
+    selectedAccount.value = null
+  }
+
   // Actions
   /**
    * Fetch all bank accounts for the logged in user from the API
@@ -262,6 +267,27 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
   }
 
   /**
+   * Search for recipient accounts by first and last name
+   * @param {string} firstName - First name of account holder
+   * @param {string} lastName - Last name of account holder
+   * @returns {Promise<Array>} Array of matching accounts
+   */
+  async function searchRecipientAccounts(firstName, lastName) {
+    try {
+      const params = {}
+
+      if (firstName) params.firstName = firstName
+      if (lastName) params.lastName = lastName
+
+      const response = await axios.get('/accounts/lookup', { params })
+      return response.data.data || []
+    } catch (err) {
+      console.error('Error searching recipient accounts:', err)
+      return []
+    }
+  }
+
+  /**
    * Update account status (approve/reject)
    */
   async function updateAccountStatus(accountId, status) {
@@ -305,6 +331,7 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     loading,
     error,
     success,
+    clearSelectedAccount,
     accounts,
     currentPage,
     pageSize,
@@ -321,6 +348,7 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     requestNewAccount,
     updateAccountSettings,
     fetchAccounts,
+    searchRecipientAccounts,
     updateAccountStatus,
   }
 })
