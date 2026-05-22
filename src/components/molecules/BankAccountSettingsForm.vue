@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
+import { useAuthStore } from '@/stores/auth'
 
 const bankAccountStore = useBankAccountStore()
+const authStore = useAuthStore()
 
 const props = defineProps({
   bankAccount: {
@@ -15,6 +17,7 @@ const emit = defineEmits(['save', 'cancel'])
 
 const accountTitle = ref('')
 const dailySpendingLimit = ref(props.bankAccount?.dailyLimit || 2500)
+const absoluteLimit = ref(props.bankAccount?.absoluteLimit || null)
 
 const quickSelectLimits = [500, 1000, 2500, 5000]
 
@@ -22,6 +25,7 @@ const handleSave = () => {
   emit('save', {
     title: accountTitle.value ? accountTitle.value : props.bankAccount.title,
     dailyLimit: dailySpendingLimit.value,
+    absoluteLimit: absoluteLimit.value,
   })
 }
 
@@ -31,6 +35,9 @@ const handleCancel = () => {
 
 const selectLimit = limit => {
   dailySpendingLimit.value = limit
+}
+const selectAbsoluteLimit = limit => {
+  absoluteLimit.value = limit
 }
 </script>
 
@@ -92,6 +99,38 @@ const selectLimit = limit => {
             €{{ limit.toLocaleString() }}
           </button>
         </div>
+      </div>
+      <!-- Absolute Limit -->
+      <div v-if="authStore.isEmployee">
+        <div class="mb-4 flex items-baseline justify-between">
+          <label class="text-sm font-semibold text-gray-900">Absolute Limit</label>
+          <span class="text-2xl font-bold text-[#b54d08]"
+            >€{{
+              props.bankAccount.absoluteLimit
+                ? props.bankAccount.absoluteLimit.toLocaleString()
+                : 'N/A'
+            }}</span
+          >
+        </div>
+        <input
+          type="number"
+          v-model="absoluteLimit"
+          class="mb-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-[#b54d08] focus:outline-none focus:ring-2 focus:ring-[#f08a12] focus:ring-opacity-20"
+        />
+        <div class="mb-6 flex justify-between text-xs text-gray-500">
+          <span
+            >€{{
+              props.bankAccount.absoluteLimit
+                ? props.bankAccount.absoluteLimit.toLocaleString()
+                : 'N/A'
+            }}</span
+          >
+        </div>
+        <p class="text-sm text-gray-500">
+          The absolute limit is the maximum negative balance allowed on this account. It cannot be
+          changed from this interface. Please contact the system administrator if you wish to modify
+          it.
+        </p>
       </div>
 
       <!-- Info Alert -->

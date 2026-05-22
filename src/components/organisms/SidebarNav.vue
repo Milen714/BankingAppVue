@@ -13,16 +13,16 @@ const items = computed(() => {
     return [
       { key: 'Dashboard', label: 'Dashboard', icon: 'pi pi-th-large', route: '/employee' },
       {
-        key: 'Pending Accounts',
-        label: 'Pending Accounts',
+        key: 'Bank Accounts Management',
+        label: 'Bank Accounts Management',
         icon: 'pi pi-building-columns',
-        route: '/employee/accounts',
+        route: '/employee/account-management',
       },
       {
-        key: 'Pending Users',
-        label: 'Pending Users',
+        key: 'User Management',
+        label: 'User Management',
         icon: 'pi pi-user-plus',
-        route: '/employee/users',
+        route: '/employee/user-management',
       },
       {
         key: 'Transactions',

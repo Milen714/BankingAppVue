@@ -13,6 +13,10 @@ import CustomerBankAccountsView from '@/components/pages/Customer/CustomerBankAc
 import CustomerAccountView from '@/components/pages/Customer/CustomerAccountView.vue'
 import CustomerProfileView from '@/components/pages/Customer/CustomerProfileView.vue'
 import CustomerAccountSettings from '@/components/pages/Customer/BankAccountSettings.vue'
+import EmployeePortalView from '@/components/pages/Employee/EmployeePortal.vue'
+import UserManagementView from '@/components/pages/Employee/UserManagementView.vue'
+import UserBankAccountManagementView from '@/components/pages/Employee/UserBankAccountManagementView.vue'
+import BankAccountLimitsAndTransactions from '@/components/pages/Employee/BankAccountLimitsAndTransactions.vue'
 // import NotFound from '@/components/pages/NotFound.vue'
 
 const router = createRouter({
@@ -98,7 +102,33 @@ const router = createRouter({
     {
       path: '/employee',
       name: 'employee-portal',
-      component: CustomerPortalView,
+      component: EmployeePortalView,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/user-management',
+      name: 'employee-user-management',
+      component: UserManagementView,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/account-management',
+      name: 'employee-user-bank-account-management',
+      component: UserBankAccountManagementView,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/account-management/:iban',
+      name: 'employee-account-settings',
+      component: BankAccountLimitsAndTransactions,
+      props: true,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/account-management/settings/:iban',
+      name: 'employee-account-settings-set-limits',
+      component: CustomerAccountSettings,
+      props: true,
       meta: { requiresAuth: true, requiresEmployee: true },
     },
     // {

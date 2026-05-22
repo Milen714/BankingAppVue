@@ -81,7 +81,7 @@ const closeMenuOnSelect = () => {
             Register
           </RouterLink>
         </li>
-        <li v-if="authStore.isLoggedIn">
+        <li v-if="authStore.isLoggedIn && !authStore.isEmployee">
           <RouterLink
             to="/customer"
             class="block rounded-lg border border-[#d7c8b2] px-3 py-2 text-sm font-semibold transition-colors hover:bg-[#e7d8c3]"
@@ -90,6 +90,17 @@ const closeMenuOnSelect = () => {
             "
           >
             Customer Dashboard
+          </RouterLink>
+        </li>
+        <li v-if="authStore.isLoggedIn && authStore.isEmployee">
+          <RouterLink
+            to="/employee"
+            class="block rounded-lg border border-[#d7c8b2] px-3 py-2 text-sm font-semibold transition-colors hover:bg-[#e7d8c3]"
+            :class="
+              isActive('/employee') ? 'bg-[#e7d8c3] text-[#4a3821]' : 'bg-[#efe4d4] text-[#5f4b32]'
+            "
+          >
+            Employee Dashboard
           </RouterLink>
         </li>
         <li v-if="authStore.isLoggedIn">
@@ -157,7 +168,7 @@ const closeMenuOnSelect = () => {
             Register
           </RouterLink>
         </li>
-        <li v-if="authStore.isLoggedIn">
+        <li v-if="authStore.isLoggedIn && !authStore.isEmployee">
           <RouterLink
             to="/customer"
             class="block rounded-lg border border-[#d7c8b2] bg-[#efe4d4] px-3 py-2 text-sm font-semibold text-[#5f4b32] transition-colors hover:bg-[#e7d8c3]"
@@ -165,6 +176,16 @@ const closeMenuOnSelect = () => {
             @click="closeMenuOnSelect"
           >
             Customer Dashboard
+          </RouterLink>
+        </li>
+        <li v-if="authStore.isLoggedIn && authStore.isEmployee">
+          <RouterLink
+            to="/employee"
+            class="block rounded-lg border border-[#d7c8b2] bg-[#efe4d4] px-3 py-2 text-sm font-semibold text-[#5f4b32] transition-colors hover:bg-[#e7d8c3]"
+            :class="isActive('/employee') ? 'bg-[#e7d8c3] text-[#4a3821]' : ''"
+            @click="closeMenuOnSelect"
+          >
+            Employee Dashboard
           </RouterLink>
         </li>
         <li v-if="authStore.isLoggedIn">

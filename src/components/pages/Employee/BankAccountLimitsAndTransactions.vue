@@ -2,44 +2,22 @@
 import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
+import TransactionsList from '@/components/organisms/TransactionsList.vue'
 import BankAccountInfoCard from '@/components/molecules/BankAccountInfoCard.vue'
-import BankAccountSettingsForm from '@/components/molecules/BankAccountSettingsForm.vue'
-import { useAuthStore } from '@/stores/auth'
 import { useBankAccountStore } from '@/stores/bankAccount'
-import { onMounted, computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const authStore = useAuthStore()
 const route = useRoute()
-const router = useRouter()
 const iban = route.params.iban
 const bankAccountStore = useBankAccountStore()
 const bankAccount = ref(null)
 
 onMounted(async () => {
-  console.log('Settings mounted, fetching account details...')
-  if (!authStore.isEmployee) {
-    await bankAccountStore.fetchMyBankAccounts()
-  } else {
-    await bankAccountStore.fetchAccounts({ iban: iban })
-  }
   await bankAccountStore.fetchBankAccountByIban(iban)
+  await bankAccountStore.fetchAccountTransactions(iban)
   bankAccount.value = bankAccountStore.selectedAccount
-  console.log('Fetched account:', bankAccount.value)
 })
-
-const handleSaveSettings = settings => {
-  console.log('Saving settings:', settings)
-  // Add API call here to save settings
-  bankAccountStore.updateAccountSettings(bankAccount.value.id, settings)
-  setTimeout(() => {
-    router.back()
-  }, 5000)
-}
-
-const handleCancelSettings = () => {
-  router.back()
-}
 </script>
 
 <template>
@@ -79,34 +57,23 @@ const handleCancelSettings = () => {
               label: 'Settings',
               icon: 'pi pi-cog',
               type: 'secondary',
-              linkTo: `/customer/accounts/settings/${bankAccount?.iban}`,
+              linkTo: `/employee/account-management/settings/${bankAccount?.iban}`,
             },
           ]"
-        >
-        </PortalHeader>
-        <!-- Settings Content -->
-        <BankAccountInfoCard v-if="bankAccount" :bankAccount="bankAccount" />
-
-        <div
-          v-if="bankAccountStore.success"
-          class="mt-6 rounded-lg bg-green-100 border border-green-400 text-green-700 px-4 py-3 transition-all duration-300"
-        >
-          <i
-            class="pi pi-check text-green-900 p-3 rounded-[200px] border border-green-700 mr-2"
-          ></i>
-          Account settings updated successfully!
-        </div>
-
-        <BankAccountSettingsForm
-          v-if="bankAccount"
-          :bankAccount="bankAccount"
-          class="mt-6"
-          @save="handleSaveSettings"
-          @cancel="handleCancelSettings"
         />
-      </div>
 
-      <CustomerBottomNav />
+        <BankAccountInfoCard v-if="bankAccount" :bankAccount="bankAccount" class="mb-8" />
+
+        <!-- Transactions Section -->
+        <section class="mt-8">
+          <TransactionsList
+            :title="'Recent Transactions'"
+            :transactions="bankAccountStore.recentTransactions"
+          />
+        </section>
+      </div>
     </div>
+
+    <CustomerBottomNav />
   </section>
 </template>
