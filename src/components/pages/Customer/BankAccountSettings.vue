@@ -36,6 +36,13 @@ const handleSaveSettings = settings => {
     router.back()
   }, 5000)
 }
+const linkTo = computed(() => {
+  if (authStore.isEmployee) {
+    return `/employee/account-management/${iban}`
+  } else {
+    return `/customer/accounts/${iban}`
+  }
+})
 
 const handleCancelSettings = () => {
   router.back()
@@ -52,34 +59,10 @@ const handleCancelSettings = () => {
           :title="bankAccount ? bankAccount.title : 'Account Details'"
           :buttons="[
             {
-              label: 'Transfer',
-              icon: 'pi pi-arrow-up',
-              type: 'primary',
-              linkTo: '/customer/transfer',
-            },
-            {
-              label: 'Deposit ATM',
-              icon: 'pi pi-arrow-down',
-              type: 'primary',
-              linkTo: `/customer/deposit?iban=${bankAccount?.iban}`,
-            },
-            {
-              label: 'Withdraw ATM',
-              icon: 'pi pi-money-bill',
-              type: 'primary',
-              linkTo: '/customer/withdraw',
-            },
-            {
-              label: 'Request New Account',
-              icon: 'pi pi-plus-circle',
+              label: 'Back to Account',
+              icon: 'pi pi-arrow-left',
               type: 'secondary',
-              linkTo: '/customer/request-account',
-            },
-            {
-              label: 'Settings',
-              icon: 'pi pi-cog',
-              type: 'secondary',
-              linkTo: `/customer/accounts/settings/${bankAccount?.iban}`,
+              linkTo: linkTo,
             },
           ]"
         >
