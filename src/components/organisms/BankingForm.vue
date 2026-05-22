@@ -11,7 +11,10 @@ const bankAccountStore = useBankAccountStore()
 const transactionStore = useTransactionStore()
 
 onMounted(async () => {
-  await bankAccountStore.fetchMyBankAccounts()
+  // Only fetch user's own accounts for customer context
+  if (!route.path.includes('/employee')) {
+    await bankAccountStore.fetchMyBankAccounts()
+  }
   const fromIbanParam = route.query.fromIban?.toString() || ''
 
   if (props.type === 'DEPOSIT') {

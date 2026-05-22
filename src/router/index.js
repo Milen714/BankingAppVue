@@ -14,6 +14,7 @@ import CustomerAccountView from '@/components/pages/Customer/CustomerAccountView
 import CustomerProfileView from '@/components/pages/Customer/CustomerProfileView.vue'
 import CustomerAccountSettings from '@/components/pages/Customer/BankAccountSettings.vue'
 import EmployeePortalView from '@/components/pages/Employee/EmployeePortal.vue'
+import EmployeeTransferView from '@/components/pages/Employee/EmployeeTransferView.vue'
 import UserManagementView from '@/components/pages/Employee/UserManagementView.vue'
 import UserBankAccountManagementView from '@/components/pages/Employee/UserBankAccountManagementView.vue'
 import BankAccountLimitsAndTransactions from '@/components/pages/Employee/BankAccountLimitsAndTransactions.vue'
@@ -116,6 +117,13 @@ const router = createRouter({
       path: '/employee/account-management',
       name: 'employee-user-bank-account-management',
       component: UserBankAccountManagementView,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/account-management/transfer/:iban',
+      name: 'employee-account-transfer',
+      component: EmployeeTransferView,
+      props: true,
       meta: { requiresAuth: true, requiresEmployee: true },
     },
     {

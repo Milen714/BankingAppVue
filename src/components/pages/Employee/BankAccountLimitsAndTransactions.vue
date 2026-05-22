@@ -35,26 +35,9 @@ onMounted(async () => {
               label: 'Transfer',
               icon: 'pi pi-arrow-up',
               type: 'primary',
-              linkTo: '/customer/transfer',
+              linkTo: `/employee/account-management/transfer/${bankAccount?.iban}?fromIban=${bankAccount?.iban}`,
             },
-            {
-              label: 'Deposit ATM',
-              icon: 'pi pi-arrow-down',
-              type: 'primary',
-              linkTo: `/customer/deposit?iban=${bankAccount?.iban}`,
-            },
-            {
-              label: 'Withdraw ATM',
-              icon: 'pi pi-money-bill',
-              type: 'primary',
-              linkTo: '/customer/withdraw',
-            },
-            {
-              label: 'Request New Account',
-              icon: 'pi pi-plus-circle',
-              type: 'secondary',
-              linkTo: '/customer/request-account',
-            },
+
             {
               label: 'Settings',
               icon: 'pi pi-cog',

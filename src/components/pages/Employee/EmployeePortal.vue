@@ -23,35 +23,7 @@ onMounted(() => {
       <EmployeeSidebarNav />
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
-        <PortalHeader
-          :title="'Overview'"
-          :buttons="[
-            {
-              label: 'Transfer',
-              icon: 'pi pi-arrow-up',
-              type: 'primary',
-              linkTo: '/customer/transfer',
-            },
-            {
-              label: 'Deposit ATM',
-              icon: 'pi pi-arrow-down',
-              type: 'primary',
-              linkTo: '/customer/deposit',
-            },
-            {
-              label: 'Withdraw ATM',
-              icon: 'pi pi-money-bill',
-              type: 'primary',
-              linkTo: '/customer/withdraw',
-            },
-            {
-              label: 'Request New Account',
-              icon: 'pi pi-plus-circle',
-              type: 'secondary',
-              linkTo: '/customer/request-account',
-            },
-          ]"
-        />
+        <PortalHeader :title="'Overview'" :buttons="[]" />
 
         <!-- Error Message -->
         <section
