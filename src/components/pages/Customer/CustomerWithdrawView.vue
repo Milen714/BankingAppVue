@@ -30,7 +30,7 @@ const handleTransferSuccess = () => {
 
       <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
         <PortalHeader
-          :title="'Withdraw Funds'"
+          :title="'Withdraw ATM'"
           :buttons="[
             {
               label: 'Request New Account',

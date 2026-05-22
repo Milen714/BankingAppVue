@@ -49,7 +49,7 @@ const handleTransferSuccess = () => {
               linkTo: '/customer/request-account',
             },
             {
-              label: 'Withdraw Funds',
+              label: 'Withdraw ATM',
               icon: 'pi pi-money-bill',
               type: 'primary',
               linkTo: '/customer/withdraw',

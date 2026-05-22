@@ -30,13 +30,13 @@ onMounted(async () => {
               linkTo: '/customer/transfer',
             },
             {
-              label: 'Deposit',
+              label: 'Deposit ATM',
               icon: 'pi pi-arrow-down',
               type: 'primary',
               linkTo: '/customer/deposit',
             },
             {
-              label: 'Withdraw Funds',
+              label: 'Withdraw ATM',
               icon: 'pi pi-money-bill',
               type: 'primary',
               linkTo: '/customer/withdraw',

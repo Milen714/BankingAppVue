@@ -25,6 +25,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     ownerId: null,
     startDate: null,
     endDate: null,
+    type: null,
   })
 
   /**
@@ -104,6 +105,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     ownerId = null,
     startDate = null,
     endDate = null,
+    type = null,
     sort = 'timestamp,desc',
   } = {}) {
     loading.value = true
@@ -113,7 +115,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     currentPage.value = page
     pageSize.value = size
     currentSort.value = sort
-    filters.value = { iban, ownerId, startDate, endDate }
+    filters.value = { iban, ownerId, startDate, endDate, type }
 
     try {
       const params = {
@@ -127,6 +129,7 @@ export const useTransactionStore = defineStore('transaction', () => {
       if (startDate) params.startDate = startDate
       if (endDate) params.endDate = endDate
       if (sort) params.sort = sort
+      if (type) params.type = type
 
       const response = await axios.get('/transactions', { params })
       console.log('Fetched all transactions:', response.data)

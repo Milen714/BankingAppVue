@@ -13,15 +13,18 @@ const transactionStore = useTransactionStore()
 const ibanSearch = ref('')
 const startDateFilter = ref('')
 const endDateFilter = ref('')
+const typeFilter = ref('All')
 
 // Handle search/filter
 const handleSearch = async () => {
+  const typeValue = typeFilter.value === 'All' ? null : typeFilter.value
   await transactionStore.fetchAllTransactions({
     page: 0,
     pageSize: transactionStore.pageSize,
     iban: ibanSearch.value || null,
     startDate: startDateFilter.value || null,
     endDate: endDateFilter.value || null,
+    type: typeValue,
     sort: transactionStore.currentSort,
   })
 }
@@ -34,6 +37,7 @@ const goToPage = async page => {
     iban: transactionStore.filters.iban,
     startDate: transactionStore.filters.startDate,
     endDate: transactionStore.filters.endDate,
+    type: transactionStore.filters.type,
     sort: transactionStore.currentSort,
   })
 }
@@ -46,6 +50,7 @@ const handlePageSizeChange = async newSize => {
     iban: transactionStore.filters.iban,
     startDate: transactionStore.filters.startDate,
     endDate: transactionStore.filters.endDate,
+    type: transactionStore.filters.type,
     sort: transactionStore.currentSort,
   })
 }
@@ -126,6 +131,23 @@ onMounted(async () => {
                 type="date"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
+            </div>
+
+            <!-- Transaction Type Filter -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">
+                Transaction Type
+              </label>
+              <select
+                v-model="typeFilter"
+                @change="handleSearch"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option>All</option>
+                <option value="DEPOSIT">Deposit</option>
+                <option value="TRANSFER">Transfer</option>
+                <option value="WITHDRAWAL">Withdrawal</option>
+              </select>
             </div>
           </div>
         </div>
