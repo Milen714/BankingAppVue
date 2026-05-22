@@ -12,8 +12,6 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
   const error = ref(null)
   const success = ref(false)
   const selectedAccount = ref(null)
-  const selectedAccountTransactions = ref([])
-  const recentTransactions = ref([])
 
   // Pagination & Filter State
   const accounts = ref([]) // For admin/employee view with filtering
@@ -97,29 +95,6 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     }
   }
   /**
-   * Perform a transfer between accounts using the API
-   * @param {*} payload
-   * @returns
-   */
-  async function executeTransaction(payload) {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await axios.post('/transactions', payload)
-      await fetchMyBankAccounts(true) // Refresh accounts to reflect new balances, force=true to bypass cache
-      return response.data
-    } catch (err) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        'An error occurred while executing the transfer.'
-      error.value = errorMessage
-      throw new Error(errorMessage)
-    } finally {
-      loading.value = false
-    }
-  }
-  /**
    * Sort accounts into savings and current based on their type. This is called after fetching accounts to keep the logic in one place.
    */
   function sortAccountsByType() {
@@ -128,46 +103,8 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
   }
 
   /**
-   * Fetch transactions for a specific account
-   * @param {string} iban - The IBAN of the account for which to fetch transactions
-   */
-  async function fetchAccountTransactions(iban) {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await axios.get(`/transactions?iban=${iban}`)
-      recentTransactions.value = response.data.data
-      console.log('Fetched transactions for account', iban, response.data)
-    } catch (err) {
-      error.value = err.response?.data || 'An error occurred while fetching transactions.'
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
    * Fetch recent transactions for the logged in user
    */
-  async function fetchRecentTransactions() {
-    const authStore = useAuthStore()
-    if (!authStore.isLoggedIn) {
-      error.value = 'You must be logged in to view transactions.'
-      return
-    }
-
-    loading.value = true
-    error.value = null
-    try {
-      const response = await axios.get(`/transactions?ownerId=${authStore.user.id}`)
-      recentTransactions.value = response.data.data
-      console.log('Fetched recent transactions:', response.data)
-    } catch (err) {
-      error.value = err.response?.data || 'An error occurred while fetching transactions.'
-    } finally {
-      loading.value = false
-    }
-  }
-
   async function requestNewAccount(payload) {
     loading.value = true
     error.value = null
@@ -300,7 +237,6 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     myAccounts,
     mySavingsAccounts,
     myCurrentAccounts,
-    recentTransactions,
     selectedAccount,
     loading,
     error,
@@ -315,9 +251,6 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     fetchMyBankAccounts,
     fetchBankAccountByIban,
     sortAccountsByType,
-    executeTransaction,
-    fetchAccountTransactions,
-    fetchRecentTransactions,
     requestNewAccount,
     updateAccountSettings,
     fetchAccounts,

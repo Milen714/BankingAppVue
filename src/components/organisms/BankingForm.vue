@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import FormGroup from '@/components/molecules/FormGroup.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
+import { useTransactionStore } from '@/stores/transaction'
 
 const bankAccountStore = useBankAccountStore()
+const transactionStore = useTransactionStore()
 
 onMounted(async () => {
   await bankAccountStore.fetchMyBankAccounts()
@@ -183,7 +185,7 @@ const handleTransfer = async () => {
     console.log(`Submitting ${props.type.toLowerCase()}:`, payload)
 
     // Call the transfer API
-    await bankAccountStore.executeTransaction(payload)
+    await transactionStore.executeTransaction(payload)
 
     // Assemble success details based on operation type
     const details = {

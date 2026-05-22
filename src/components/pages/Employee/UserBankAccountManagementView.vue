@@ -89,10 +89,10 @@ function handlePageSizeChange(newSize) {
 
 <template>
   <section class="bg-[#f6efec]">
-    <div class="mx-auto flex min-h-[calc(100vh-60px)]">
+    <div class="flex">
       <EmployeeSidebarNav />
 
-      <div class="w-full px-4 pb-24 pt-6 md:px-8 md:pb-8">
+      <div class="w-full px-3 pb-24 pt-4 md:px-8 md:pb-8 md:pt-6">
         <PortalHeader :title="'Bank Account Management'" :buttons="[]" />
 
         <!-- Error Message -->
@@ -112,8 +112,8 @@ function handlePageSizeChange(newSize) {
         </section>
 
         <!-- Filter & Search Section -->
-        <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-lg border border-gray-200 p-4 md:p-6 mb-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <!-- IBAN Search -->
             <div>
               <label class="block text-xs font-semibold text-gray-700 uppercase mb-2"> IBAN </label>

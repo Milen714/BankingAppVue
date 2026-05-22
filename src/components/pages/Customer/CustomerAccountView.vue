@@ -5,18 +5,20 @@ import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
 import BankAccountInfoCard from '@/components/molecules/BankAccountInfoCard.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
+import { useTransactionStore } from '@/stores/transaction'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const iban = route.params.iban
 const bankAccountStore = useBankAccountStore()
+const transactionStore = useTransactionStore()
 const bankAccount = ref(null)
 
 onMounted(async () => {
   await bankAccountStore.fetchMyBankAccounts()
   await bankAccountStore.fetchBankAccountByIban(iban)
-  await bankAccountStore.fetchAccountTransactions(iban)
+  await transactionStore.fetchAccountTransactions(iban)
   bankAccount.value = bankAccountStore.selectedAccount
 })
 </script>
@@ -69,7 +71,7 @@ onMounted(async () => {
         <section class="mt-8">
           <TransactionsList
             :title="'Recent Transactions'"
-            :transactions="bankAccountStore.recentTransactions"
+            :transactions="transactionStore.recentTransactions"
           />
         </section>
       </div>

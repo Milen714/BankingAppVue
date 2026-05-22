@@ -5,14 +5,16 @@ import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import CustomerAccountsList from '@/components/organisms/CustomerAccountsList.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
+import { useTransactionStore } from '@/stores/transaction'
 import { onMounted, computed } from 'vue'
 
 const bankAccountStore = useBankAccountStore()
+const transactionStore = useTransactionStore()
 
 onMounted(async () => {
   console.log('Portal mounted, fetching accounts...')
   await bankAccountStore.fetchMyBankAccounts()
-  await bankAccountStore.fetchRecentTransactions()
+  await transactionStore.fetchRecentTransactions()
 })
 
 const currentAccounts = computed(() => bankAccountStore.myCurrentAccounts)
@@ -76,7 +78,7 @@ const savingsAccounts = computed(() => bankAccountStore.mySavingsAccounts)
         <section class="mt-8">
           <TransactionsList
             :title="'Recent Transactions'"
-            :transactions="bankAccountStore.recentTransactions"
+            :transactions="transactionStore.recentTransactions"
           />
         </section>
       </div>

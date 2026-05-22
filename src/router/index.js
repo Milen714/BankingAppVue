@@ -17,6 +17,7 @@ import EmployeePortalView from '@/components/pages/Employee/EmployeePortal.vue'
 import UserManagementView from '@/components/pages/Employee/UserManagementView.vue'
 import UserBankAccountManagementView from '@/components/pages/Employee/UserBankAccountManagementView.vue'
 import BankAccountLimitsAndTransactions from '@/components/pages/Employee/BankAccountLimitsAndTransactions.vue'
+import TransactionOverview from '@/components/pages/Employee/TransactionOverview.vue'
 // import NotFound from '@/components/pages/NotFound.vue'
 
 const router = createRouter({
@@ -129,6 +130,12 @@ const router = createRouter({
       name: 'employee-account-settings-set-limits',
       component: CustomerAccountSettings,
       props: true,
+      meta: { requiresAuth: true, requiresEmployee: true },
+    },
+    {
+      path: '/employee/transaction-overview',
+      name: 'employee-transaction-overview',
+      component: TransactionOverview,
       meta: { requiresAuth: true, requiresEmployee: true },
     },
     // {

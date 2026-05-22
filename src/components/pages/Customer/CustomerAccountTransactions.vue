@@ -4,13 +4,13 @@ import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
-import { useBankAccountStore } from '@/stores/bankAccount'
+import { useTransactionStore } from '@/stores/transaction'
 import { onMounted } from 'vue'
 
-const bankAccountStore = useBankAccountStore()
+const transactionStore = useTransactionStore()
 
 onMounted(async () => {
-  await bankAccountStore.fetchRecentTransactions()
+  await transactionStore.fetchRecentTransactions()
 })
 </script>
 
@@ -54,7 +54,7 @@ onMounted(async () => {
         <section class="mt-8">
           <TransactionsList
             :title="'Recent Transactions'"
-            :transactions="bankAccountStore.recentTransactions"
+            :transactions="transactionStore.recentTransactions"
           />
         </section>
       </div>

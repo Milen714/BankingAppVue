@@ -58,28 +58,35 @@ function getSortIcon(column) {
 
     <!-- Table -->
     <div v-else>
-      <table class="w-full">
-        <thead class="bg-[#fef4f0] border-b border-gray-200">
-          <tr>
-            <th v-for="column in columns" :key="column.key" class="px-4 py-4 text-left">
-              <button
-                v-if="column.sortable"
-                @click="handleSort(column)"
-                class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-900 hover:text-orange-600 transition-colors"
+      <!-- Scrollable wrapper for mobile -->
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-max md:min-w-0">
+          <thead class="bg-[#fef4f0] border-b border-gray-200 sticky top-0">
+            <tr>
+              <th
+                v-for="column in columns"
+                :key="column.key"
+                class="px-2 md:px-4 py-3 md:py-4 text-left"
               >
-                {{ column.label }}
-                <i :class="['pi text-xs', getSortIcon(column)]"></i>
-              </button>
-              <span v-else class="text-xs font-bold uppercase tracking-wider text-gray-900">
-                {{ column.label }}
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <slot></slot>
-        </tbody>
-      </table>
+                <button
+                  v-if="column.sortable"
+                  @click="handleSort(column)"
+                  class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-900 hover:text-orange-600 transition-colors"
+                >
+                  {{ column.label }}
+                  <i :class="['pi text-xs', getSortIcon(column)]"></i>
+                </button>
+                <span v-else class="text-xs font-bold uppercase tracking-wider text-gray-900">
+                  {{ column.label }}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <slot></slot>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Empty State -->
       <div v-if="data.length === 0" class="flex flex-col items-center justify-center py-12">

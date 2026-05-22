@@ -36,10 +36,10 @@ function handlePageSizeChange(event) {
 </script>
 
 <template>
-  <div class="mt-6 flex items-center justify-between">
+  <div class="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <!-- Items per page -->
-    <div class="flex items-center gap-2">
-      <span class="text-sm text-gray-600">Show</span>
+    <div class="flex items-center gap-2 text-sm">
+      <span class="text-gray-600">Show</span>
       <select
         :value="pageSize"
         @change="handlePageSizeChange"
@@ -49,16 +49,16 @@ function handlePageSizeChange(event) {
         <option :value="20">20</option>
         <option :value="50">50</option>
       </select>
-      <span class="text-sm text-gray-600">per page</span>
+      <span class="text-gray-600">per page</span>
     </div>
 
     <!-- Pagination Info -->
-    <div class="text-sm text-gray-600">
+    <div class="text-sm text-gray-600 order-3 md:order-2">
       Page {{ currentPage + 1 }} of {{ totalPages }} • Total: {{ totalElements }} {{ itemLabel }}
     </div>
 
     <!-- Pagination Controls -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center justify-center gap-2 order-2 md:order-3">
       <button
         @click="goToPage(currentPage - 1)"
         :disabled="currentPage === 0"

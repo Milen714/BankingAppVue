@@ -1,11 +1,11 @@
 <script setup>
 import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
 import { computed } from 'vue'
-import { useBankAccountStore } from '@/stores/bankAccount'
+import { useTransactionStore } from '@/stores/transaction'
 import EmptySection from '@/components/molecules/EmptySection.vue'
 import LoadingSection from '@/components/molecules/LoadingSection.vue'
 
-const bankAccountStore = useBankAccountStore()
+const transactionStore = useTransactionStore()
 
 const props = defineProps({
   title: {
@@ -75,7 +75,7 @@ const mappedTransactions = computed(() => props.transactions.map(mapTransactionF
       </button>
     </div>
     <ul
-      v-if="bankAccountStore.recentTransactions.length > 0"
+      v-if="props.transactions.length > 0"
       class="overflow-hidden rounded-2xl border border-[#e7c9bd] bg-white"
     >
       <CustomerTransactionItem
@@ -90,6 +90,6 @@ const mappedTransactions = computed(() => props.transactions.map(mapTransactionF
       />
     </ul>
     <EmptySection v-else message="No recent transactions to display." icon="pi pi-inbox" />
-    <LoadingSection v-if="bankAccountStore.loading" message="Loading transactions..." />
+    <LoadingSection v-if="transactionStore.loading" message="Loading transactions..." />
   </section>
 </template>

@@ -28,7 +28,7 @@ const items = computed(() => {
         key: 'Transactions',
         label: 'Transactions',
         icon: 'pi pi-receipt',
-        route: '/employee/transactions',
+        route: '/employee/transaction-overview',
       },
     ]
   } else {

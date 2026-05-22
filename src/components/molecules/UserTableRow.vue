@@ -78,7 +78,7 @@ const getRoleLabel = role => {
     </td>
 
     <!-- Actions -->
-    <td class="px-4 py-4 text-sm text-right space-x-2">
+    <td class="flex flex-col items-center gap-2 px-4 py-4 text-sm text-right space-x-2">
       <button
         v-if="!user.isApproved"
         @click="emit('approve', user)"
