@@ -2,13 +2,23 @@
 import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import BankingForm from '@/components/organisms/BankingForm.vue'
+import BankAccountInfoCard from '@/components/molecules/BankAccountInfoCard.vue'
 import { onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useBankAccountStore } from '@/stores/bankAccount'
 
+const route = useRoute()
 const bankAccountStore = useBankAccountStore()
 
 onMounted(async () => {
   await bankAccountStore.fetchMyBankAccounts()
+  const fromIbanParam = route.query.fromIban?.toString() || ''
+
+  if (fromIbanParam) {
+    await bankAccountStore.fetchBankAccountByIban(fromIbanParam)
+  } else {
+    bankAccountStore.clearSelectedAccount()
+  }
 })
 const currentAccounts = computed(() =>
   bankAccountStore.myCurrentAccounts.map(account => ({
@@ -45,6 +55,11 @@ const handleTransferSuccess = () => {
               linkTo: '/customer/withdraw',
             },
           ]"
+        />
+        <!--Bank Account Info Card-->
+        <BankAccountInfoCard
+          v-if="bankAccountStore.selectedAccount"
+          :bankAccount="bankAccountStore.selectedAccount"
         />
 
         <!-- Transfer Form -->

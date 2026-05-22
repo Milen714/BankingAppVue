@@ -64,6 +64,12 @@ const handleAccountClick = () => {
       {{ account.iban }}
     </td>
 
+    <!-- Owner -->
+    <td class="px-4 py-4 text-sm text-gray-900">
+      <span v-if="account.owner">{{ account.owner.firstName }} {{ account.owner.lastName }}</span>
+      <span v-else class="text-gray-400">-</span>
+    </td>
+
     <!-- Title -->
     <td class="px-2 md:px-4 py-3 md:py-4 text-xs md:text-sm text-gray-900 font-medium">
       <span class="text-orange-600">{{ account.title }}</span>

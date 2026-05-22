@@ -36,7 +36,7 @@ onMounted(async () => {
               label: 'Transfer',
               icon: 'pi pi-arrow-up',
               type: 'primary',
-              linkTo: '/customer/transfer',
+              linkTo: `/customer/transfer?fromIban=${bankAccount?.iban}`,
             },
             {
               label: 'Deposit',
