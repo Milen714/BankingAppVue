@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios, { getAuthToken, setAuthToken as setApiAuthToken } from '@/utils/axios.js'
+import axios, {
+  getAuthToken,
+  setAuthToken as setApiAuthToken,
+  setRefreshToken as setRefreshToken,
+} from '@/utils/axios.js'
 
 let responseInterceptorInitialized = false
 
@@ -9,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const isEmployee = computed(() => user.value?.role === 'ROLE_EMPLOYEE')
   const token = ref(getAuthToken())
+  const refreshToken = ref(null)
   const loading = ref(false)
   const isLoggedIn = computed(() => !!user.value)
 
@@ -80,6 +85,8 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       const authToken = responseData.token || responseData.access_token || responseData.data?.token
+      const refreshToken = responseData.refreshToken || responseData.data?.refreshToken || null
+      //console.log('refreshToken:', refreshToken)
 
       // User might be returned directly in response (has id field) or nested under 'user' key
       const authUser =
@@ -96,6 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       setAuthToken(authToken, authUser)
+      setRefreshToken(refreshToken)
 
       if (!authUser) {
         await fetchLoggedInUser()
@@ -183,23 +191,34 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.removeItem('auth_token')
     }
   }
+  function setRefreshToken(newRefreshToken) {
+    refreshToken.value = newRefreshToken
+    // Also save to localStorage as backup
+    if (newRefreshToken) {
+      localStorage.setItem('refresh_token', newRefreshToken)
+    } else {
+      localStorage.removeItem('refresh_token')
+    }
+  }
 
   // Clear auth state on logout
   function clearAuth() {
     token.value = null
     user.value = null
+    refreshToken.value = null
     loading.value = false
     setApiAuthToken(null)
+    setRefreshToken(null)
   }
 
   // Call backend logout for completeness, then always clear client session.
   async function logout() {
     try {
-      await axios.post(`/auth/logout`, {})
+      await fetch('http://localhost:8080/logout', { method: 'POST', credentials: 'include' })
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
-      clearSessionState()
+      clearAuth()
     }
   }
 
@@ -216,6 +235,7 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     setAuthToken,
+    setRefreshToken,
     clearAuth,
     setupAxiosInterceptors,
   }

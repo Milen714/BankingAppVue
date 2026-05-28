@@ -22,6 +22,9 @@ const absoluteLimit = ref(props.bankAccount?.absoluteLimit || null)
 const quickSelectLimits = [500, 1000, 2500, 5000]
 
 const handleSave = () => {
+  if (!authStore.isEmployee) {
+    absoluteLimit.value = null // Customers cannot set absolute limit
+  }
   emit('save', {
     title: accountTitle.value ? accountTitle.value : props.bankAccount.title,
     dailyLimit: dailySpendingLimit.value,
