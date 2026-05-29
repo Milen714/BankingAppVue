@@ -26,7 +26,38 @@ export const useTransactionStore = defineStore('transaction', () => {
     startDate: null,
     endDate: null,
     type: null,
+    amountLt: null,
+    amountGt: null,
+    amountEq: null,
   })
+
+  /**
+   * Clear all transaction data (called on logout)
+   */
+  function resetStore() {
+    transactions.value = []
+    selectedTransaction.value = null
+    recentTransactions.value = []
+    selectedAccountTransactions.value = []
+    loading.value = false
+    error.value = null
+    success.value = false
+    currentPage.value = 0
+    pageSize.value = 20
+    totalElements.value = 0
+    totalPages.value = 0
+    currentSort.value = 'timestamp,desc'
+    filters.value = {
+      iban: null,
+      ownerId: null,
+      startDate: null,
+      endDate: null,
+      type: null,
+      amountLt: null,
+      amountGt: null,
+      amountEq: null,
+    }
+  }
 
   /**
    * Perform a transfer between accounts using the API
@@ -106,6 +137,9 @@ export const useTransactionStore = defineStore('transaction', () => {
     startDate = null,
     endDate = null,
     type = null,
+    amountLt = null,
+    amountGt = null,
+    amountEq = null,
     sort = 'timestamp,desc',
   } = {}) {
     loading.value = true
@@ -115,7 +149,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     currentPage.value = page
     pageSize.value = size
     currentSort.value = sort
-    filters.value = { iban, ownerId, startDate, endDate, type }
+    filters.value = { iban, ownerId, startDate, endDate, type, amountLt, amountGt, amountEq }
 
     try {
       const params = {
@@ -130,6 +164,9 @@ export const useTransactionStore = defineStore('transaction', () => {
       if (endDate) params.endDate = endDate
       if (sort) params.sort = sort
       if (type) params.type = type
+      if (amountLt) params.amountLt = amountLt
+      if (amountGt) params.amountGt = amountGt
+      if (amountEq) params.amountEq = amountEq
 
       const response = await axios.get('/transactions', { params })
       console.log('Fetched all transactions:', response.data)
@@ -163,5 +200,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     fetchAccountTransactions,
     fetchRecentTransactions,
     fetchAllTransactions,
+    resetStore,
   }
 })

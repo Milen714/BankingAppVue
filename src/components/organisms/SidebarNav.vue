@@ -41,12 +41,6 @@ const items = computed(() => {
         route: '/customer/accounts',
       },
       {
-        key: 'Transfers',
-        label: 'Transfers',
-        icon: 'pi pi-arrow-right-arrow-left',
-        route: '/customer/transfers',
-      },
-      {
         key: 'Transactions',
         label: 'Transactions',
         icon: 'pi pi-receipt',

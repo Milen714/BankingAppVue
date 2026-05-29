@@ -4,6 +4,7 @@ import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import CustomerAccountsList from '@/components/organisms/CustomerAccountsList.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
+import CombinedBalanceCard from '@/components/molecules/CombinedBalanceCard.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
 import { useTransactionStore } from '@/stores/transaction'
 import { onMounted, computed } from 'vue'
@@ -14,6 +15,7 @@ const transactionStore = useTransactionStore()
 onMounted(async () => {
   console.log('Portal mounted, fetching accounts...')
   await bankAccountStore.fetchMyBankAccounts()
+  await bankAccountStore.fetchSummary()
   await transactionStore.fetchRecentTransactions()
 })
 
@@ -58,6 +60,9 @@ const savingsAccounts = computed(() => bankAccountStore.mySavingsAccounts)
             },
           ]"
         />
+
+        <!-- Combined Balance Card -->
+        <CombinedBalanceCard :summary="bankAccountStore.summary" />
 
         <!-- Error Message -->
         <section

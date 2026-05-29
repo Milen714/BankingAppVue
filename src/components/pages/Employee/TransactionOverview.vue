@@ -4,56 +4,23 @@ import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import DataTable from '@/components/organisms/DataTable.vue'
 import PaginationControls from '@/components/organisms/PaginationControls.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
-import { onMounted, ref } from 'vue'
+import TransactionFilterSection from '@/components/molecules/TransactionFilterSection.vue'
+import { onMounted } from 'vue'
 import { useTransactionStore } from '@/stores/transaction'
+import { useTransactionFilters } from '@/composables/useTransactionFilters'
 
 const transactionStore = useTransactionStore()
-
-// Local state for filters and sorting
-const ibanSearch = ref('')
-const startDateFilter = ref('')
-const endDateFilter = ref('')
-const typeFilter = ref('All')
-
-// Handle search/filter
-const handleSearch = async () => {
-  const typeValue = typeFilter.value === 'All' ? null : typeFilter.value
-  await transactionStore.fetchAllTransactions({
-    page: 0,
-    pageSize: transactionStore.pageSize,
-    iban: ibanSearch.value || null,
-    startDate: startDateFilter.value || null,
-    endDate: endDateFilter.value || null,
-    type: typeValue,
-    sort: transactionStore.currentSort,
-  })
-}
-
-// Handle page change
-const goToPage = async page => {
-  await transactionStore.fetchAllTransactions({
-    page,
-    pageSize: transactionStore.pageSize,
-    iban: transactionStore.filters.iban,
-    startDate: transactionStore.filters.startDate,
-    endDate: transactionStore.filters.endDate,
-    type: transactionStore.filters.type,
-    sort: transactionStore.currentSort,
-  })
-}
-
-// Handle page size change
-const handlePageSizeChange = async newSize => {
-  await transactionStore.fetchAllTransactions({
-    page: 0,
-    pageSize: newSize,
-    iban: transactionStore.filters.iban,
-    startDate: transactionStore.filters.startDate,
-    endDate: transactionStore.filters.endDate,
-    type: transactionStore.filters.type,
-    sort: transactionStore.currentSort,
-  })
-}
+const {
+  ibanSearch,
+  startDateFilter,
+  endDateFilter,
+  typeFilter,
+  amountComparisonType,
+  amountValue,
+  handleSearch,
+  goToPage,
+  handlePageSizeChange,
+} = useTransactionFilters()
 
 // Initialize on mount
 onMounted(async () => {
@@ -148,6 +115,36 @@ onMounted(async () => {
                 <option value="TRANSFER">Transfer</option>
                 <option value="WITHDRAWAL">Withdrawal</option>
               </select>
+            </div>
+
+            <!-- Amount Comparison Type -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">
+                Amount
+              </label>
+              <select
+                v-model="amountComparisonType"
+                @change="handleSearch"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="Eq">Equals</option>
+                <option value="Lt">Less Than</option>
+                <option value="Gt">Greater Than</option>
+              </select>
+            </div>
+
+            <!-- Amount Value Input -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">
+                Amount Value
+              </label>
+              <input
+                v-model="amountValue"
+                @change="handleSearch"
+                type="number"
+                placeholder="Enter amount..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
             </div>
           </div>
         </div>

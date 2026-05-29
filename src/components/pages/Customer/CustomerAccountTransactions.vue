@@ -3,14 +3,36 @@ import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import CustomerTransactionItem from '@/components/molecules/CustomerTransactionItem.vue'
+import PaginationControls from '@/components/organisms/PaginationControls.vue'
+import TransactionFilterSection from '@/components/molecules/TransactionFilterSection.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
 import { useTransactionStore } from '@/stores/transaction'
+import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
+import { useTransactionFilters } from '@/composables/useTransactionFilters'
 
+const authStore = useAuthStore()
 const transactionStore = useTransactionStore()
+const {
+  ibanSearch,
+  startDateFilter,
+  endDateFilter,
+  typeFilter,
+  amountComparisonType,
+  amountValue,
+  handleSearch,
+  goToPage,
+  handlePageSizeChange,
+} = useTransactionFilters(authStore.user.id)
 
+// Initialize on mount
 onMounted(async () => {
-  await transactionStore.fetchRecentTransactions()
+  await transactionStore.fetchAllTransactions({
+    ownerId: authStore.user.id,
+    page: 0,
+    pageSize: 20,
+    sort: 'timestamp,desc',
+  })
 })
 </script>
 
@@ -52,11 +74,35 @@ onMounted(async () => {
 
         <!-- Transactions Section -->
         <section class="mt-8">
-          <TransactionsList
+          <!-- Filter & Search Section -->
+          <TransactionFilterSection
+            v-model:ibanSearch="ibanSearch"
+            v-model:startDateFilter="startDateFilter"
+            v-model:endDateFilter="endDateFilter"
+            v-model:typeFilter="typeFilter"
+            v-model:amountComparisonType="amountComparisonType"
+            v-model:amountValue="amountValue"
+            @search="handleSearch"
+          />
+          <!-- <TransactionsList
             :title="'Recent Transactions'"
             :transactions="transactionStore.recentTransactions"
+          /> -->
+          <TransactionsList
+            :title="'Recent Transactions'"
+            :transactions="transactionStore.transactions"
           />
         </section>
+        <!-- Pagination Section using PaginationControls Component -->
+        <PaginationControls
+          :current-page="transactionStore.currentPage"
+          :total-pages="transactionStore.totalPages"
+          :total-elements="transactionStore.totalElements"
+          :page-size="transactionStore.pageSize"
+          item-label="transactions"
+          @page-changed="goToPage"
+          @size-changed="handlePageSizeChange"
+        />
       </div>
     </div>
 

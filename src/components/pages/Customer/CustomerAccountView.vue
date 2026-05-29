@@ -3,11 +3,14 @@ import CustomerSidebarNav from '@/components/organisms/SidebarNav.vue'
 import CustomerBottomNav from '@/components/organisms/CustomerBottomNav.vue'
 import PortalHeader from '@/components/organisms/PortalHeader.vue'
 import TransactionsList from '@/components/organisms/TransactionsList.vue'
+import TransactionFilterSection from '@/components/molecules/TransactionFilterSection.vue'
+import PaginationControls from '@/components/organisms/PaginationControls.vue'
 import BankAccountInfoCard from '@/components/molecules/BankAccountInfoCard.vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
 import { useTransactionStore } from '@/stores/transaction'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useTransactionFilters } from '@/composables/useTransactionFilters'
 
 const route = useRoute()
 const iban = route.params.iban
@@ -15,11 +18,28 @@ const bankAccountStore = useBankAccountStore()
 const transactionStore = useTransactionStore()
 const bankAccount = ref(null)
 
+const {
+  ibanSearch,
+  startDateFilter,
+  endDateFilter,
+  typeFilter,
+  amountComparisonType,
+  amountValue,
+  handleSearch,
+  goToPage,
+  handlePageSizeChange,
+} = useTransactionFilters()
+
 onMounted(async () => {
   await bankAccountStore.fetchMyBankAccounts()
   await bankAccountStore.fetchBankAccountByIban(iban)
-  await transactionStore.fetchAccountTransactions(iban)
   bankAccount.value = bankAccountStore.selectedAccount
+
+  // Set IBAN to the selected account
+  ibanSearch.value = iban
+
+  // Fetch transactions with pagination
+  await handleSearch()
 })
 </script>
 
@@ -69,11 +89,34 @@ onMounted(async () => {
 
         <!-- Transactions Section -->
         <section class="mt-8">
+          <!-- Filter & Search Section -->
+          <TransactionFilterSection
+            v-model:ibanSearch="ibanSearch"
+            v-model:startDateFilter="startDateFilter"
+            v-model:endDateFilter="endDateFilter"
+            v-model:typeFilter="typeFilter"
+            v-model:amountComparisonType="amountComparisonType"
+            v-model:amountValue="amountValue"
+            :hideIbanField="true"
+            @search="handleSearch"
+          />
+
           <TransactionsList
-            :title="'Recent Transactions'"
-            :transactions="transactionStore.recentTransactions"
+            :title="'Account Transactions'"
+            :transactions="transactionStore.transactions"
           />
         </section>
+
+        <!-- Pagination Section using PaginationControls Component -->
+        <PaginationControls
+          :current-page="transactionStore.currentPage"
+          :total-pages="transactionStore.totalPages"
+          :total-elements="transactionStore.totalElements"
+          :page-size="transactionStore.pageSize"
+          item-label="transactions"
+          @page-changed="goToPage"
+          @size-changed="handlePageSizeChange"
+        />
       </div>
     </div>
 

@@ -34,6 +34,11 @@ export const useAuthStore = defineStore('auth', () => {
       error => {
         if (error.response?.status === 401) {
           clearSessionState()
+          // Also clear data from other stores on 401
+          const { useBankAccountStore } = require('./bankAccount')
+          const { useTransactionStore } = require('./transaction')
+          useBankAccountStore().resetStore()
+          useTransactionStore().resetStore()
         }
         return Promise.reject(error)
       }
@@ -218,7 +223,14 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
+      // Clear auth data first
       clearAuth()
+
+      // Clear all data from other stores to prevent stale data on next login
+      const { useBankAccountStore } = await import('./bankAccount')
+      const { useTransactionStore } = await import('./transaction')
+      useBankAccountStore().resetStore()
+      useTransactionStore().resetStore()
     }
   }
 

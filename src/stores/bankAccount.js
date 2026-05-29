@@ -12,6 +12,7 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
   const error = ref(null)
   const success = ref(false)
   const selectedAccount = ref(null)
+  const summary = ref(null) // Stores combined balance summary
 
   // Pagination & Filter State
   const accounts = ref([]) // For admin/employee view with filtering
@@ -30,6 +31,33 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
 
   function clearSelectedAccount() {
     selectedAccount.value = null
+  }
+
+  /**
+   * Clear all bank account data (called on logout)
+   */
+  function resetStore() {
+    myAccounts.value = []
+    mySavingsAccounts.value = []
+    myCurrentAccounts.value = []
+    accounts.value = []
+    selectedAccount.value = null
+    summary.value = null
+    loading.value = false
+    error.value = null
+    success.value = false
+    currentPage.value = 0
+    pageSize.value = 20
+    totalElements.value = 0
+    totalPages.value = 0
+    currentSort.value = 'id,asc'
+    filters.value = {
+      ownerId: null,
+      iban: null,
+      status: null,
+      firstName: null,
+      lastName: null,
+    }
   }
 
   // Actions
@@ -62,6 +90,35 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
       sortAccountsByType()
     } catch (err) {
       error.value = err.response?.data || 'An error occurred while fetching bank accounts.'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * Fetch account summary (combined balance from all accounts)
+   */
+  async function fetchSummary() {
+    const authStore = useAuthStore()
+
+    // Always wait for auth to be ready
+    if (authStore.loading) {
+      await authStore.fetchLoggedInUser()
+    }
+
+    if (!authStore.isLoggedIn) {
+      error.value = 'You must be logged in to view your account summary.'
+      return
+    }
+
+    loading.value = true
+    error.value = null
+    try {
+      const response = await axios.get(`/accounts/summary?ownerId=${authStore.user.id}`)
+      console.log('Fetched account summary:', response.data)
+      summary.value = response.data
+    } catch (err) {
+      error.value = err.response?.data || 'An error occurred while fetching account summary.'
     } finally {
       loading.value = false
     }
@@ -264,10 +321,12 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     mySavingsAccounts,
     myCurrentAccounts,
     selectedAccount,
+    summary,
     loading,
     error,
     success,
     clearSelectedAccount,
+    resetStore,
     accounts,
     currentPage,
     pageSize,
@@ -276,6 +335,7 @@ export const useBankAccountStore = defineStore('bankAccount', () => {
     currentSort,
     filters,
     fetchMyBankAccounts,
+    fetchSummary,
     fetchBankAccountByIban,
     sortAccountsByType,
     requestNewAccount,
