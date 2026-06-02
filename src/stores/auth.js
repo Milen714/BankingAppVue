@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import config from '../config.js'
 import axios, {
   getAuthToken,
   setAuthToken as setApiAuthToken,
@@ -219,7 +220,24 @@ export const useAuthStore = defineStore('auth', () => {
   // Call backend logout for completeness, then always clear client session.
   async function logout() {
     try {
-      await fetch('http://localhost:8080/logout', { method: 'POST', credentials: 'include' })
+      const headers = {}
+
+      // Add Authorization header with bearer token
+      if (token.value) {
+        headers['Authorization'] = `Bearer ${token.value}`
+      }
+
+      // Add Refresh-Token header from localStorage
+      const storedRefreshToken = localStorage.getItem('refresh_token')
+      if (storedRefreshToken) {
+        headers['Refresh-Token'] = storedRefreshToken
+      }
+
+      await fetch(`${config.apiDomain}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers,
+      })
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
