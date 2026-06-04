@@ -4,7 +4,7 @@ import config from '../config.js'
 import axios, {
   getAuthToken,
   setAuthToken as setApiAuthToken,
-  setRefreshToken as setRefreshToken,
+  setRefreshToken as setApiRefreshToken,
 } from '@/utils/axios.js'
 
 let responseInterceptorInitialized = false
@@ -109,7 +109,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       setAuthToken(authToken, authUser)
-      setRefreshToken(refreshToken)
+      setApiRefreshToken(refreshToken)
 
       if (!authUser) {
         await fetchLoggedInUser()

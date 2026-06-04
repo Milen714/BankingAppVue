@@ -109,6 +109,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError) {
         // Refresh failed (refresh token expired or invalid) - redirect to login
+        console.error('Token refresh failed:', refreshError)
         isRefreshing = false
         authToken = null
         refreshToken = null
@@ -116,7 +117,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('refresh_token')
 
         // Redirect to login page
-        window.location.href = '/login'
+        window.location.href = '/BankingAppVue/login'
 
         return Promise.reject(refreshError)
       }
