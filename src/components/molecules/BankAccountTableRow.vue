@@ -9,15 +9,16 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['approve', 'deny'])
+const emit = defineEmits(['approve', 'deny', 'close'])
 
 const getStatusClass = () => {
   const statusMap = {
     APPROVED: 'bg-emerald-100 text-emerald-800',
     PENDING: 'bg-orange-100 text-orange-800',
     PENDING_APPROVAL: 'bg-orange-100 text-orange-800',
-    REJECTED: 'bg-red-100 text-red-800',
+    DENIED: 'bg-red-100 text-red-800',
     SUSPENDED: 'bg-gray-100 text-gray-800',
+    CLOSED: 'bg-gray-100 text-gray-800',
   }
   return statusMap[props.account.status] || 'bg-gray-100 text-gray-800'
 }
@@ -27,8 +28,9 @@ const getStatusIcon = () => {
     APPROVED: 'pi-check-circle',
     PENDING: 'pi-clock',
     PENDING_APPROVAL: 'pi-clock',
-    REJECTED: 'pi-times-circle',
+    DENIED: 'pi-times-circle',
     SUSPENDED: 'pi-ban',
+    CLOSED: 'pi-times',
   }
   return iconMap[props.account.status] || 'pi-info-circle'
 }
@@ -117,7 +119,7 @@ const handleAccountClick = () => {
       class="flex flex-col items-center gap-1 md:gap-2 px-2 md:px-4 py-3 md:py-4 text-xs md:text-sm text-right"
     >
       <button
-        v-if="account.status === 'PENDING' || account.status === 'PENDING_APPROVAL'"
+        v-if="account.status === 'CLOSED' || account.status === 'PENDING_APPROVAL'"
         @click="emit('approve', account)"
         class="inline-flex items-center px-2 md:px-4 py-1 md:py-2 bg-orange-700 text-white text-xs font-medium rounded hover:bg-orange-800 transition-colors"
       >
@@ -131,6 +133,14 @@ const handleAccountClick = () => {
       >
         <i class="pi pi-times mr-1 text-xs"></i>
         <span class="hidden md:inline">Deny</span>
+      </button>
+      <button
+        v-if="account.status === 'APPROVED'"
+        @click="emit('close', account)"
+        class="inline-flex items-center px-2 md:px-4 py-1 md:py-2 bg-gray-600 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors"
+      >
+        <i class="pi pi-times mr-1 text-xs"></i>
+        <span class="hidden md:inline">Close</span>
       </button>
       <span v-else class="text-gray-400 text-xs">—</span>
     </td>

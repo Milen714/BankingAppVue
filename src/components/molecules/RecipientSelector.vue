@@ -1,7 +1,9 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useBankAccountStore } from '@/stores/bankAccount'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const props = defineProps({
   modelValue: {
     type: String,
@@ -115,6 +117,13 @@ const displayText = computed(() => {
   }
   return activeTab.value === 'own' ? 'Select an account' : 'Search for recipient'
 })
+
+onMounted(() => {
+  // If fromIban is set, pre-select the own account tab
+  if (authStore.isEmployee) {
+    switchTab('external')
+  }
+})
 </script>
 
 <template>
@@ -122,6 +131,7 @@ const displayText = computed(() => {
     <!-- Tabs -->
     <div class="flex gap-2 border-b border-gray-200">
       <button
+        v-if="!authStore.isEmployee"
         @click="switchTab('own')"
         :class="[
           'px-4 py-2 font-medium text-sm transition-colors border-b-2',

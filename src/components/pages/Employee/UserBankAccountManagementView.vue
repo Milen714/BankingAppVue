@@ -73,7 +73,11 @@ function handleApprove(account) {
 
 function handleDeny(account) {
   console.log('Deny account:', account)
-  bankAccountStore.updateAccountStatus(account.id, 'REJECTED')
+  bankAccountStore.updateAccountStatus(account.id, 'DENIED')
+}
+function handleClose(account) {
+  console.log('Close account:', account)
+  bankAccountStore.updateAccountStatus(account.id, 'CLOSED')
 }
 
 // Handle search
@@ -176,9 +180,9 @@ function handlePageSizeChange(newSize) {
               >
                 <option>All</option>
                 <option value="APPROVED">Approved</option>
-                <option value="PENDING">Pending</option>
-                <option value="REJECTED">Rejected</option>
-                <option value="SUSPENDED">Suspended</option>
+                <option value="PENDING_APPROVAL">Pending</option>
+                <option value="DENIED">Denied</option>
+                <option value="CLOSED">Closed</option>
               </select>
             </div>
           </div>
@@ -198,6 +202,7 @@ function handlePageSizeChange(newSize) {
             :account="account"
             @approve="handleApprove"
             @deny="handleDeny"
+            @close="handleClose"
           />
         </DataTable>
 
