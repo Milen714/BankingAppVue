@@ -152,10 +152,6 @@ const handleModalClose = () => {
       </div>
 
       <div class="mt-7 text-center text-sm text-slate-700">
-        <p class="inline-flex items-center gap-1">
-          <i class="pi pi-shield text-xs"></i>
-          256-bit SSL Secure
-        </p>
         <p class="mt-1.5">
           Don't have an account?
           <RouterLink to="/register" class="font-medium text-amber-700 hover:text-amber-800">
