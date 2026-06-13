@@ -19,6 +19,7 @@ import UserManagementView from '@/components/pages/Employee/UserManagementView.v
 import UserBankAccountManagementView from '@/components/pages/Employee/UserBankAccountManagementView.vue'
 import BankAccountLimitsAndTransactions from '@/components/pages/Employee/BankAccountLimitsAndTransactions.vue'
 import TransactionOverview from '@/components/pages/Employee/TransactionOverview.vue'
+import LoginViewTarek from '@/components/pages/Login/LoginViewTarek.vue'
 // import NotFound from '@/components/pages/NotFound.vue'
 
 const router = createRouter({
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/loginTarek',
+      name: 'login-tarek',
+      component: LoginViewTarek,
     },
     {
       path: '/register',
